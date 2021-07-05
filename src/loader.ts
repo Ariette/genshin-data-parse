@@ -461,7 +461,7 @@ export const RegionSearchCondExcelConfigData = await import('ExcelBinOutput/Regi
 export const RegionSearchExcelConfigData = await import('ExcelBinOutput/RegionSearchExcelConfigData.json').then(w => w.default);
 export const RegionSearchRegionExcelConfigData = await import('ExcelBinOutput/RegionSearchRegionExcelConfigData.json').then(w => w.default);
 
-// Artifats
+// Artifacts
 export const ReliquaryAffixExcelConfigData = await import('ExcelBinOutput/ReliquaryAffixExcelConfigData.json').then(w => w.default);
 export const ReliquaryCodexExcelConfigData = await import('ExcelBinOutput/ReliquaryCodexExcelConfigData.json').then(w => w.default);
 export const ReliquaryDecomposeExcelConfigData = await import('ExcelBinOutput/ReliquaryDecomposeExcelConfigData.json').then(w => w.default);
