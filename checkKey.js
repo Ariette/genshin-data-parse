@@ -21,6 +21,6 @@ async function checkKey(path) {
     return [...new Set(list)].sort();
 }
 
-checkKey('../lib/GenshinData/ExcelBinOutput/MaterialExcelConfigData.json').then(data => {
+checkKey('...target path here').then(data => {
     console.log(data);
 })

@@ -1,5 +1,5 @@
 import { MaterialExcelConfigData, MaterialSourceDataExcelConfigData, MaterialCodexExcelConfigData } from '../loader';
-import Localizable from './Localizable';
+import { Localizable } from './Common';
 
 
 /* Key List of MaterialExcelConfigData
@@ -29,7 +29,7 @@ import Localizable from './Localizable';
   'PicPath'
   'PlayGainEffect'
   'Rank'
-  'RankLevel' : 등급 정보(1~5성)
+  'RankLevel' : 성급
   'SatiationParams'
   'SetID'
   'SpecialDescTextMapHash'
@@ -96,8 +96,7 @@ for (const data of MaterialSourceDataExcelConfigData) {
 // Checking availability by using codex.
 // If there are any items that are not in codex but available in game, you should add them manually.
 for (const data of MaterialCodexExcelConfigData) {
-    const target = {}
-    target[data.MaterialId].available = true;
+    Material[data.MaterialId].available = true;
 }
 
 export default Material

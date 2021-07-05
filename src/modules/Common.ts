@@ -1,6 +1,6 @@
 import { TextMap } from '../loader'
 
-class Localizable {
+export class Localizable {
     id: number;
     text: {[lang: string]: string} | string;
 
@@ -24,4 +24,7 @@ class Localizable {
     }
 }
 
-export default Localizable
+export interface Units {
+    id: number;
+    count: number;
+}
