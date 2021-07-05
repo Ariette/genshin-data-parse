@@ -24,7 +24,13 @@ export class Localizable {
     }
 }
 
-export interface Units {
+export interface Unit {
     id: number;
     count: number;
+}
+
+export interface Prop {
+    type: string;
+    value?: number;
+    curve?: string
 }

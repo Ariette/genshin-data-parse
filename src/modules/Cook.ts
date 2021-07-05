@@ -1,5 +1,5 @@
 import { CookBonusExcelConfigData, CookRecipeExcelConfigData } from '../loader';
-import { Localizable, Units } from './Common';
+import { Localizable, Unit } from './Common';
 
 // CookRecipeExcelConfigData
 /*
@@ -36,8 +36,8 @@ interface Cook {
     desc: Localizable;
     effect: Localizable[];
     icon: string;
-    ingredients: Units[];
-    foods: Units[];
+    ingredients: Unit[];
+    foods: Unit[];
     name: Localizable;
     rarity: number;
     character?: number;

@@ -1,5 +1,6 @@
 import { WeaponCodexExcelConfigData, WeaponExcelConfigData, WeaponPromoteExcelConfigData } from '../loader';
-import { Localizable, Units } from './Common';
+import { Localizable, Unit, Prop } from './Common';
+import Promote from './Promote'
 
 // Key List of WeaponExcelConfigData
 /* 
@@ -42,12 +43,6 @@ import { Localizable, Units } from './Common';
   'WeaponPromoteId'
 */
 
-interface WeaponProp {
-    type: string;
-    value: number;
-    curve?: string
-}
-
 interface Weapon {
     icon: string;
     iconAwake: string;
@@ -57,57 +52,16 @@ interface Weapon {
     name: Localizable;
     rarity: number;
     baseExp: number;
-    promote: WeaponPromote;
-    prop: WeaponProp[];
-    destroy: Units;
+    promote: unknown;
+    prop: Prop[];
+    destroy: Unit;
     story?: number;
     refineItem?: number;
     skill?: number;
-    available: boolean;
+    available?: boolean;
 }
 
-interface WeaponPromote {
-    props?: WeaponProp[];
-    costs?: Units[];
-    ascension?: number;
-}
-
-declare type addProp = {
-    PropType: string;
-    Value?: number;
-}
-declare type costItem = {
-    Id?: number;
-    Count?: number;
-}
-
-const WeaponPromote: {[id: number]: WeaponPromote[]} = {}
-for (const data of WeaponPromoteExcelConfigData) {
-    const addProps: addProp[] = data.AddProps;
-    const costItems: costItem[] = data.CostItems;
-    const promote: WeaponPromote = {}
-    promote.props = addProps.filter(w => w.Value).map(w => {
-        return {
-            type: w.PropType,
-            value: w.Value
-        }
-    });
-    if (data.PromoteLevel) promote.ascension = data.PromoteLevel;
-    if (costItems.some(w => w.Id)) {
-        promote.costs = costItems.map(w => {
-            return {
-                id: w.Id,
-                count: w.Count
-            }
-        });
-        promote.costs.push({
-            id: 202,
-            count: data.CoinCost
-        })
-    }
-    if (WeaponPromote[data.WeaponPromoteId]) WeaponPromote[data.WeaponPromoteId] = [];
-    WeaponPromote[data.WeaponPromoteId].push(promote);
-}
+const Promotes = Promote(WeaponPromoteExcelConfigData, 'WeaponPromoteId');
 
 const Weapon: {[id: number]: Weapon} = {}
 for (const data of WeaponExcelConfigData) {
@@ -121,7 +75,7 @@ for (const data of WeaponExcelConfigData) {
         name: new Localizable(data.NameTextMapHash),
         rarity: data.RankLevel,
         baseExp: data.WeaponBaseExp,
-        promote: WeaponPromote[data.WeaponPromoteId],
+        promote: Promotes[data.WeaponPromoteId],
     }
     target[data.Id].prop = data.WeaponProp.filter(w => w.InitValue).map(w => {
         return {

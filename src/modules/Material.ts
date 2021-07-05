@@ -1,8 +1,8 @@
 import { MaterialExcelConfigData, MaterialSourceDataExcelConfigData, MaterialCodexExcelConfigData } from '../loader';
 import { Localizable } from './Common';
 
-
-/* Key List of MaterialExcelConfigData
+// Key List of MaterialExcelConfigData
+/*
   'CdGroup' : 쿨다운 그룹. 같은 그룹인 애들끼리 같이 쿨이 돎
   'CdTime' : 쿨타임. 단위는 초(sec)
   'CloseBagAfterUsed'
@@ -84,6 +84,8 @@ for (const data of MaterialExcelConfigData) {
         }
     Object.assign(Material, target);
 }
+
+// Add source data
 for (const data of MaterialSourceDataExcelConfigData) {
     const target = {};
     target[data.Id] = {
