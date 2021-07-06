@@ -1,4 +1,4 @@
-import { TextMap } from '../loader'
+import { TextMap } from '../loader.js'
 
 export class Localizable {
     id: number;

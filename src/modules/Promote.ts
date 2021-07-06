@@ -1,4 +1,4 @@
-import { Prop, Unit } from './Common'
+import { Prop, Unit } from './Common.js'
 
 interface PromoteConfig {
     PromoteLevel?: number;
@@ -19,9 +19,9 @@ interface PromoteConfig {
 }
 
 export interface Promote {
+    ascension: number;
     props?: Prop[];
     costs?: Unit[];
-    ascension: number;
 }
 
 export default (promoteConfigs: PromoteConfig[], idKey: string): {[id: number]: Promote[]} => {
@@ -29,13 +29,13 @@ export default (promoteConfigs: PromoteConfig[], idKey: string): {[id: number]: 
     for (const data of promoteConfigs) {
         if (!data.PromoteLevel) continue;
         const promote: any = {}
+        promote.ascension = data.PromoteLevel;
         if (data.AddProps) promote.props = data.AddProps.filter(w => w.Value).map(w => {
             return {
                 type: w.PropType,
                 value: w.Value
             }
         });
-        promote.ascension = data.PromoteLevel;
         if (data.CostItems.some(w => w.Id)) promote.costs = data.CostItems.map(w => {
             return {
                 id: w.Id,

@@ -5,8 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc -p tsconfig.release.json",
-    "build:watch": "tsc -w -p tsconfig.release.json",
+    "start": "node --experimental-json-modules ./dist/index.js",
+    "prebuild": "node ./src/prebuild.js",
+    "build": "tsc -p ./src/tsconfig.json",
+    "watch": "tsc -w -p ./src/tsconfig.json",
     "lint": "eslint . --ext .ts,.tsx"
   },
   "keywords": [
@@ -22,8 +24,5 @@
     "eslint-config-prettier": "^8.3.0",
     "prettier": "^2.3.2",
     "typescript": "^4.3.5"
-  },
-  "dependencies": {
-    "clarinet": "^0.12.4"
   }
 }

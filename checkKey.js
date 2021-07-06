@@ -3,6 +3,17 @@
 
 import fs from 'fs';
 
+
+// checkKey('...some path here').then(data => console.log(data))
+/*
+  To derive key lists of a json file
+*/
+// checkDuplicate('...some path here', 'key1', 'key2').then(data => console.log(data))
+/*
+  To check whether the keys contain same values or not
+*/
+
+
 function loadJson(path) {
     return new Promise((resolve, reject) => {
         fs.readFile(path, 'utf8', (err, data) => {
@@ -21,6 +32,8 @@ async function checkKey(path) {
     return [...new Set(list)].sort();
 }
 
-checkKey('...target path here').then(data => {
-    console.log(data);
-})
+async function checkDuplicate(path, key1, key2) {
+    const target = await loadJson(path);
+    if (target.every(w => w[key1] == w[key2])) return 'Duplicates!'
+    return 'Not Duplicates!'
+}

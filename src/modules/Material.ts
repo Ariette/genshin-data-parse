@@ -1,5 +1,5 @@
-import { MaterialExcelConfigData, MaterialSourceDataExcelConfigData, MaterialCodexExcelConfigData } from '../loader';
-import { Localizable } from './Common';
+import { MaterialExcelConfigData, MaterialSourceDataExcelConfigData, MaterialCodexExcelConfigData } from '../loader.js';
+import { Localizable } from './Common.js';
 
 // Key List of MaterialExcelConfigData
 /*
@@ -89,10 +89,10 @@ for (const data of MaterialExcelConfigData) {
 for (const data of MaterialSourceDataExcelConfigData) {
     const target = {};
     target[data.Id] = {
-        source: data.TextList.map(id => new Localizable(id)).filter(w => w)
+        source: data.TextList.map(id => new Localizable(id)).filter(w => w.text)
     };
     if (data.DungeonList) target[data.Id].domain = data.DungeonList.filter(id => id != 0);
-    Object.assign(Material, target);
+    Object.assign(Material[data.Id], target[data.Id]);
 }
 
 // Checking availability by using codex.

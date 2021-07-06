@@ -20,5 +20,6 @@ node_modules/
 .DS_Store
 
 # Custom
-/lib
 /src/checkKey.js
+dist
+output

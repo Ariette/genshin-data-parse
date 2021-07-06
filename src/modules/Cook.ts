@@ -1,5 +1,5 @@
-import { CookBonusExcelConfigData, CookRecipeExcelConfigData } from '../loader';
-import { Localizable, Unit } from './Common';
+import { CookBonusExcelConfigData, CookRecipeExcelConfigData } from '../loader.js';
+import { Localizable, Unit } from './Common.js';
 
 // CookRecipeExcelConfigData
 /*
@@ -50,7 +50,7 @@ for (const data of CookRecipeExcelConfigData) {
         id: data.Id,
         type: data.FoodType,
         desc: new Localizable(data.DescTextMapHash),
-        effect: data.EffectDesc.map(w => new Localizable(w)),
+        effect: data.EffectDesc.map(w => new Localizable(w)).filter(w => w.text),
         icon: data.Icon,
         ingredients: data.InputVec.map(w => {
             return {
@@ -70,8 +70,6 @@ for (const data of CookRecipeExcelConfigData) {
     Object.assign(Cook, target);
 }
 for (const data of CookBonusExcelConfigData) {
-    const target = {};
-    target[data.RecipeId].character = data.AvatarId;
-    Object.assign(Cook, target);
+    Cook[data.RecipeId].character = data.AvatarId;
 }
 export default Cook

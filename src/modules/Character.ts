@@ -1,7 +1,7 @@
-import { AvatarExcelConfigData, AvatarPromoteExcelConfigData } from '../loader';
-import { Localizable, Prop } from './Common';
-import Promote from './Promote';
-import AvatarSkillDepot from './Skill';
+import { AvatarExcelConfigData, AvatarPromoteExcelConfigData, FetterInfoExcelConfigData } from '../loader.js';
+import { Localizable, Prop } from './Common.js';
+import buildPromotes, { Promote } from './Promote.js';
+import AvatarSkillDepot, { SkillDepot } from './Skill.js';
 
 // Key List of AvatarExcelConfigData
 /*
@@ -62,57 +62,94 @@ import AvatarSkillDepot from './Skill';
   'WeaponType'
 */
 
+// Key List of FetterInfoExcelConfigData
+/*
+
+*/
+
 interface Character {
-    baseAtk: number;
-    promote: unknown;
+    stat: {
+        baseAtk: number;
+        baseDef: number;
+        baseHp: number;
+        curve: Prop[];
+        upgrade: Promote[];
+    }
     type: string;
-    baseDef: number;
     dsec: Localizable;
-    baseHp: string;
     icon: string;
     iconSide: string;
     id: number;
     iconImage: string;
     name: Localizable;
-    curve: Prop[];
-    skill: number;
+    skills: SkillDepot;
     weapontype: string;
     available: boolean;
+    rarity: number;
+    element?: Localizable;
+    constellation?: Localizable;
+    association?: Localizable;
+    title?: Localizable;
+    region?: string;
+    cv?: {
+        cn?: Localizable;
+        jp?: Localizable;
+        en?: Localizable;
+        ko?: Localizable;
+    };
+    birthday?: string;
+    day?: string[];
+    material?: string[];
 }
 
-const Promotes = Promote(AvatarPromoteExcelConfigData, 'AvatarPromoteId');
+const Promotes = buildPromotes(AvatarPromoteExcelConfigData, 'AvatarPromoteId');
 const SkillDepots = AvatarSkillDepot();
 const Character: {[id: number]: Character} = {};
 for (const data of AvatarExcelConfigData) {
     const target = {};
     target[data.Id] = {
-        baseAtk: data.AttackBase,
+        id: data.Id,
+        stat: {
+            baseAtk: data.AttackBase,
+            baseDef: data.DefenseBase,
+            baseHp: data.HpBase,
+            curve: data.PropGrowCurves.map(w => {
+                return {
+                    type: w.Type,
+                    curve: w.GrowCurve
+                }
+            }),
+            upgrade: Promotes[data.AvatarPromoteId]
+        },
         type: data.BodyType,
-        baseDef: data.DefenseBase,
         desc: new Localizable(data.DescTextMapHash),
-        baseHp: data.HpBase,
         icon: data.IconName,
         iconSide: data.SideIconName,
         iconImages: data.ImageName,
         name: new Localizable(data.NameTextMapHash),
         weapontype: data.WeaponType,
         available: data.UseType === 'AVATAR_FORMAL',
-        curve: data.PropGrowCurves.map(w => {
-            return {
-                type: w.Type,
-                curve: w.GrowCurve
-            }
-        })
+        rarity: data.QualityType == 'QUALITY_ORANGE' ? 5 : 4
     }
-    target[data.Id].promote = Promotes[data.AvatarPromoteId];
-    target[data.Id].curve = data.PropGrowCurves.map(w => {
-        return {
-            type: w.Type,
-            curve: w.GrowCurve
-        }
-    })
-    target[data.Id].skill = SkillDepots[data.SkillDepotId];
+    target[data.Id].skills = SkillDepots[data.SkillDepotId];
     Object.assign(Character, target);
+}
+for (const data of FetterInfoExcelConfigData) {
+    const target: any = {
+        element: new Localizable(data.AvatarVisionBeforTextMapHash),
+        constellation: new Localizable(data.AvatarConstellationBeforTextMapHash),
+        association: new Localizable(data.AvatarNativeTextMapHash),
+        title: new Localizable(data.AvatarTitleTextMapHash),
+        region: data.AvatarAssocType.replace('ASSOC_TYPE_', ''),
+        cv: {
+            cn: new Localizable(data.CvChineseTextMapHash),
+            jp: new Localizable(data.CvJapaneseTextMapHash),
+            en: new Localizable(data.CvEnglishTextMapHash),
+            ko: new Localizable(data.CvKoreanTextMapHash)
+        }
+    }
+    if (data.InfoBirthMonth) target.birthday = data.InfoBirthMonth + '월 ' + data.InfoBirthDay + '일';
+    Object.assign(Character[data.AvatarId], target)
 }
 
 export default Character

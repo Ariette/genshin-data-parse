@@ -4,581 +4,597 @@
 
 // TextMap
 import fs from 'fs';
-import { compilerOptions } from '../tsconfig.json'
-import { lang } from '../config.json';
 import pa from 'path';
+import config from '../config.json';
 
 interface TextMap {
     [keyMap: number]: string
 }
 
-function loadJson(filename: string): Promise<unknown> {
-    const targetPath = pa.join(pa.resolve(), '..', compilerOptions.baseUrl, filename);
-    return new Promise((resolve, reject) => {
-        fs.readFile(targetPath, 'utf8', (err, data) => {
-            if (err) reject(err)
-            resolve(JSON.parse(data));
-        })
-    })
+function loadJson(filename: string) {
+    const targetPath = pa.join(pa.resolve(), './lib/GenshinData/', filename);
+    const data = fs.readFileSync(targetPath, 'utf8');
+    return JSON.parse(data)
 }
 
-async function loadTextMap(): Promise<{[lang: string]: TextMap}> {
+function loadTextMap(): {[lang: string]: TextMap} {
     const TextMap = {}
-    for (const l of lang) {
-        TextMap[l] = await loadJson('TextMap/TextMap' + l + '.json');
+    for (const l of config.lang) {
+        TextMap[l] = loadJson('TextMap/TextMap' + l + '.json');
     }
     return TextMap
 }
 
 // TextMap
-export const TextMap = await loadTextMap();
+export const TextMap = loadTextMap();
+
+/*
 
 //...
-export const AbilityPropExcelConfigData = await import('ExcelBinOutput/AbilityPropExcelConfigData.json').then(w => w.default);
-export const AbilityStateResistanceByIDExcelConfigData = await import('ExcelBinOutput/AbilityStateResistanceByIDExcelConfigData.json').then(w => w.default);
+export { default as AbilityPropExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AbilityPropExcelConfigData.json';
+export { default as AbilityStateResistanceByIDExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AbilityStateResistanceByIDExcelConfigData.json';
 
 // Achievement
-export const AchievementExcelConfigData = await import('ExcelBinOutput/AchievementExcelConfigData.json').then(w => w.default);
-export const AchievementGoalExcelConfigData = await import('ExcelBinOutput/AchievementGoalExcelConfigData.json').then(w => w.default);
+export { default as AchievementExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AchievementExcelConfigData.json';
+export { default as AchievementGoalExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AchievementGoalExcelConfigData.json';
 
 //...
-export const ActivityAbilityGroupExcelConfigData = await import('ExcelBinOutput/ActivityAbilityGroupExcelConfigData.json').then(w => w.default);
-export const ActivityArenaChallengeExcelConfigData = await import('ExcelBinOutput/ActivityArenaChallengeExcelConfigData.json').then(w => w.default);
-export const ActivityArenaChallengeLevelInfoExcelConfigData = await import('ExcelBinOutput/ActivityArenaChallengeLevelInfoExcelConfigData.json').then(w => w.default);
-export const ActivityArenaChallengePreviewExcelConfigData = await import('ExcelBinOutput/ActivityArenaChallengePreviewExcelConfigData.json').then(w => w.default);
-export const ActivityDeliveryDailyExcelConfigData = await import('ExcelBinOutput/ActivityDeliveryDailyExcelConfigData.json').then(w => w.default);
-export const ActivityDeliveryExcelConfigData = await import('ExcelBinOutput/ActivityDeliveryExcelConfigData.json').then(w => w.default);
-export const ActivityDeliveryWatcherDataConfigData = await import('ExcelBinOutput/ActivityDeliveryWatcherDataConfigData.json').then(w => w.default);
-export const ActivityExcelConfigData = await import('ExcelBinOutput/ActivityExcelConfigData.json').then(w => w.default);
-export const ActivityHideAndSeekBasicConfigData = await import('ExcelBinOutput/ActivityHideAndSeekBasicConfigData.json').then(w => w.default);
-export const ActivityMistTrialAvatarDataExcelConfigData = await import('ExcelBinOutput/ActivityMistTrialAvatarDataExcelConfigData.json').then(w => w.default);
-export const ActivityMistTrialLevelDataExcelConfigData = await import('ExcelBinOutput/ActivityMistTrialLevelDataExcelConfigData.json').then(w => w.default);
-export const ActivityMistTrialStatisticsListExcelConfigData = await import('ExcelBinOutput/ActivityMistTrialStatisticsListExcelConfigData.json').then(w => w.default);
-export const ActivityMistTrialWatcherListDataExcelConfigData = await import('ExcelBinOutput/ActivityMistTrialWatcherListDataExcelConfigData.json').then(w => w.default);
-export const ActivitySalesmanDailyExcelConfigData = await import('ExcelBinOutput/ActivitySalesmanDailyExcelConfigData.json').then(w => w.default);
-export const ActivitySalesmanExcelConfigData = await import('ExcelBinOutput/ActivitySalesmanExcelConfigData.json').then(w => w.default);
-export const ActivitySalesmanRewardMatchConfigData = await import('ExcelBinOutput/ActivitySalesmanRewardMatchConfigData.json').then(w => w.default);
-export const ActivityShopOverallExcelConfigData = await import('ExcelBinOutput/ActivityShopOverallExcelConfigData.json').then(w => w.default);
-export const ActivityShopSheetExcelConfigData = await import('ExcelBinOutput/ActivityShopSheetExcelConfigData.json').then(w => w.default);
-export const ActivitySkillExcelConfigData = await import('ExcelBinOutput/ActivitySkillExcelConfigData.json').then(w => w.default);
-export const ActivitySummerTimeExcelConfigData = await import('ExcelBinOutput/ActivitySummerTimeExcelConfigData.json').then(w => w.default);
-export const ActivitySummerTimeFloatSignalExcelConfigData = await import('ExcelBinOutput/ActivitySummerTimeFloatSignalExcelConfigData.json').then(w => w.default);
-export const ActivitySummerTimeRaceExcelConfigData = await import('ExcelBinOutput/ActivitySummerTimeRaceExcelConfigData.json').then(w => w.default);
-export const ActivitySummerTimeRacePreviewExcelConfigData = await import('ExcelBinOutput/ActivitySummerTimeRacePreviewExcelConfigData.json').then(w => w.default);
-export const ActivitySummerTimeStageExcelConfigData = await import('ExcelBinOutput/ActivitySummerTimeStageExcelConfigData.json').then(w => w.default);
-export const ActivityUpAvatarExcelConfigData = await import('ExcelBinOutput/ActivityUpAvatarExcelConfigData.json').then(w => w.default);
-export const ActivityWatcherConfigData = await import('ExcelBinOutput/ActivityWatcherConfigData.json').then(w => w.default);
+export { default as ActivityAbilityGroupExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityAbilityGroupExcelConfigData.json';
+export { default as ActivityArenaChallengeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityArenaChallengeExcelConfigData.json';
+export { default as ActivityArenaChallengeLevelInfoExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityArenaChallengeLevelInfoExcelConfigData.json';
+export { default as ActivityArenaChallengePreviewExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityArenaChallengePreviewExcelConfigData.json';
+export { default as ActivityDeliveryDailyExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityDeliveryDailyExcelConfigData.json';
+export { default as ActivityDeliveryExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityDeliveryExcelConfigData.json';
+export { default as ActivityDeliveryWatcherDataConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityDeliveryWatcherDataConfigData.json';
+export { default as ActivityExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityExcelConfigData.json';
+export { default as ActivityHideAndSeekBasicConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityHideAndSeekBasicConfigData.json';
+export { default as ActivityMistTrialAvatarDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityMistTrialAvatarDataExcelConfigData.json';
+export { default as ActivityMistTrialLevelDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityMistTrialLevelDataExcelConfigData.json';
+export { default as ActivityMistTrialStatisticsListExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityMistTrialStatisticsListExcelConfigData.json';
+export { default as ActivityMistTrialWatcherListDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityMistTrialWatcherListDataExcelConfigData.json';
+export { default as ActivitySalesmanDailyExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivitySalesmanDailyExcelConfigData.json';
+export { default as ActivitySalesmanExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivitySalesmanExcelConfigData.json';
+export { default as ActivitySalesmanRewardMatchConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivitySalesmanRewardMatchConfigData.json';
+export { default as ActivityShopOverallExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityShopOverallExcelConfigData.json';
+export { default as ActivityShopSheetExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityShopSheetExcelConfigData.json';
+export { default as ActivitySkillExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivitySkillExcelConfigData.json';
+export { default as ActivitySummerTimeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivitySummerTimeExcelConfigData.json';
+export { default as ActivitySummerTimeFloatSignalExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivitySummerTimeFloatSignalExcelConfigData.json';
+export { default as ActivitySummerTimeRaceExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivitySummerTimeRaceExcelConfigData.json';
+export { default as ActivitySummerTimeRacePreviewExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivitySummerTimeRacePreviewExcelConfigData.json';
+export { default as ActivitySummerTimeStageExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivitySummerTimeStageExcelConfigData.json';
+export { default as ActivityUpAvatarExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityUpAvatarExcelConfigData.json';
+export { default as ActivityWatcherConfigData } from '../lib/GenshinData/ExcelBinOutput/ActivityWatcherConfigData.json';
 
 // Animal
-export const AnimalCodexExcelConfigData = await import('ExcelBinOutput/AnimalCodexExcelConfigData.json').then(w => w.default);
-export const AnimalDescribeExcelConfigData = await import('ExcelBinOutput/AnimalDescribeExcelConfigData.json').then(w => w.default);
+export { default as AnimalCodexExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AnimalCodexExcelConfigData.json';
+export { default as AnimalDescribeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AnimalDescribeExcelConfigData.json';
 
 //...
-export const AsterActivityPerviewExcelConfigData = await import('ExcelBinOutput/AsterActivityPerviewExcelConfigData.json').then(w => w.default);
-export const AsterAvatarUpExcelConfigData = await import('ExcelBinOutput/AsterAvatarUpExcelConfigData.json').then(w => w.default);
-export const AsterLittleExcelConfigData = await import('ExcelBinOutput/AsterLittleExcelConfigData.json').then(w => w.default);
-export const AsterMidDifficultyExcelConfigData = await import('ExcelBinOutput/AsterMidDifficultyExcelConfigData.json').then(w => w.default);
-export const AsterMidExcelConfigData = await import('ExcelBinOutput/AsterMidExcelConfigData.json').then(w => w.default);
-export const AsterMidGroupsExcelConfigData = await import('ExcelBinOutput/AsterMidGroupsExcelConfigData.json').then(w => w.default);
-export const AsterMissionExcelConfigData = await import('ExcelBinOutput/AsterMissionExcelConfigData.json').then(w => w.default);
-export const AsterStageExcelConfigData = await import('ExcelBinOutput/AsterStageExcelConfigData.json').then(w => w.default);
-export const AsterTeamBuffExcelConfigData = await import('ExcelBinOutput/AsterTeamBuffExcelConfigData.json').then(w => w.default);
+export { default as AsterActivityPerviewExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AsterActivityPerviewExcelConfigData.json';
+export { default as AsterAvatarUpExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AsterAvatarUpExcelConfigData.json';
+export { default as AsterLittleExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AsterLittleExcelConfigData.json';
+export { default as AsterMidDifficultyExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AsterMidDifficultyExcelConfigData.json';
+export { default as AsterMidExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AsterMidExcelConfigData.json';
+export { default as AsterMidGroupsExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AsterMidGroupsExcelConfigData.json';
+export { default as AsterMissionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AsterMissionExcelConfigData.json';
+export { default as AsterStageExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AsterStageExcelConfigData.json';
+export { default as AsterTeamBuffExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AsterTeamBuffExcelConfigData.json';
 
 // Avatar = Character
-export const AvatarCodexExcelConfigData = await import('ExcelBinOutput/AvatarCodexExcelConfigData.json').then(w => w.default);
-export const AvatarCostumeExcelConfigData = await import('ExcelBinOutput/AvatarCostumeExcelConfigData.json').then(w => w.default);
-export const AvatarCurveExcelConfigData = await import('ExcelBinOutput/AvatarCurveExcelConfigData.json').then(w => w.default);
-export const AvatarExcelConfigData = await import('ExcelBinOutput/AvatarExcelConfigData.json').then(w => w.default);
-export const AvatarFettersLevelExcelConfigData = await import('ExcelBinOutput/AvatarFettersLevelExcelConfigData.json').then(w => w.default);
-export const AvatarFlycloakExcelConfigData = await import('ExcelBinOutput/AvatarFlycloakExcelConfigData.json').then(w => w.default);
-export const AvatarHeroEntityExcelConfigData = await import('ExcelBinOutput/AvatarHeroEntityExcelConfigData.json').then(w => w.default);
-export const AvatarLevelExcelConfigData = await import('ExcelBinOutput/AvatarLevelExcelConfigData.json').then(w => w.default);
-export const AvatarPromoteExcelConfigData = await import('ExcelBinOutput/AvatarPromoteExcelConfigData.json').then(w => w.default);
-export const AvatarSkillDepotExcelConfigData = await import('ExcelBinOutput/AvatarSkillDepotExcelConfigData.json').then(w => w.default);
-export const AvatarSkillExcelConfigData = await import('ExcelBinOutput/AvatarSkillExcelConfigData.json').then(w => w.default);
-export const AvatarTalentExcelConfigData = await import('ExcelBinOutput/AvatarTalentExcelConfigData.json').then(w => w.default);
+export { default as AvatarCodexExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarCodexExcelConfigData.json';
+export { default as AvatarCostumeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarCostumeExcelConfigData.json';
+
+*/
+
+
+export { default as AvatarCurveExcelConfigData} from '../lib/GenshinData/ExcelBinOutput/AvatarCurveExcelConfigData.json';
+export { default as AvatarExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarExcelConfigData.json';
+export { default as AvatarPromoteExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarPromoteExcelConfigData.json';
+export { default as AvatarSkillDepotExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarSkillDepotExcelConfigData.json';
+export { default as AvatarSkillExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarSkillExcelConfigData.json';
+export { default as AvatarTalentExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarTalentExcelConfigData.json';
+export { default as FetterInfoExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FetterInfoExcelConfigData.json';
+
+/*
+
+export { default as AvatarFettersLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarFettersLevelExcelConfigData.json';
+export { default as AvatarFlycloakExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarFlycloakExcelConfigData.json';
+export { default as AvatarHeroEntityExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarHeroEntityExcelConfigData.json';
+export { default as AvatarLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarLevelExcelConfigData.json';
 
 //...
-export const BargainExcelConfigData = await import('ExcelBinOutput/BargainExcelConfigData.json').then(w => w.default);
+export { default as BargainExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BargainExcelConfigData.json';
 
 // BattlePass
-export const BattlePassLevelExcelConfigData = await import('ExcelBinOutput/BattlePassLevelExcelConfigData.json').then(w => w.default);
-export const BattlePassMissionExcelConfigData = await import('ExcelBinOutput/BattlePassMissionExcelConfigData.json').then(w => w.default);
-export const BattlePassRewardExcelConfigData = await import('ExcelBinOutput/BattlePassRewardExcelConfigData.json').then(w => w.default);
-export const BattlePassScheduleExcelConfigData = await import('ExcelBinOutput/BattlePassScheduleExcelConfigData.json').then(w => w.default);
-export const BattlePassStoryExcelConfigData = await import('ExcelBinOutput/BattlePassStoryExcelConfigData.json').then(w => w.default);
+export { default as BattlePassLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BattlePassLevelExcelConfigData.json';
+export { default as BattlePassMissionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BattlePassMissionExcelConfigData.json';
+export { default as BattlePassRewardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BattlePassRewardExcelConfigData.json';
+export { default as BattlePassScheduleExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BattlePassScheduleExcelConfigData.json';
+export { default as BattlePassStoryExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BattlePassStoryExcelConfigData.json';
 
 // Birtday Mail
-export const BirthdayMailExcelConfigData = await import('ExcelBinOutput/BirthdayMailExcelConfigData.json').then(w => w.default);
+export { default as BirthdayMailExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BirthdayMailExcelConfigData.json';
 
 //...
-export const BlessingScanExcelConfigData = await import('ExcelBinOutput/BlessingScanExcelConfigData.json').then(w => w.default);
-export const BlessingScanPicExcelConfigData = await import('ExcelBinOutput/BlessingScanPicExcelConfigData.json').then(w => w.default);
-export const BlessingScanTypeExcelConfigData = await import('ExcelBinOutput/BlessingScanTypeExcelConfigData.json').then(w => w.default);
-export const BlossomChestExcelConfigData = await import('ExcelBinOutput/BlossomChestExcelConfigData.json').then(w => w.default);
-export const BlossomGroupsExcelConfigData = await import('ExcelBinOutput/BlossomGroupsExcelConfigData.json').then(w => w.default);
-export const BlossomOpenExcelConfigData = await import('ExcelBinOutput/BlossomOpenExcelConfigData.json').then(w => w.default);
-export const BlossomRefreshExcelConfigData = await import('ExcelBinOutput/BlossomRefreshExcelConfigData.json').then(w => w.default);
-export const BlossomReviseExcelConfigData = await import('ExcelBinOutput/BlossomReviseExcelConfigData.json').then(w => w.default);
-export const BlossomSectionOrderExcelConfigData = await import('ExcelBinOutput/BlossomSectionOrderExcelConfigData.json').then(w => w.default);
-export const BlossomTalkExcelConfigData = await import('ExcelBinOutput/BlossomTalkExcelConfigData.json').then(w => w.default);
-export const BonusActivityClientExcelConfigData = await import('ExcelBinOutput/BonusActivityClientExcelConfigData.json').then(w => w.default);
-export const BonusActivityExcelConfigData = await import('ExcelBinOutput/BonusActivityExcelConfigData.json').then(w => w.default);
+export { default as BlessingScanExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BlessingScanExcelConfigData.json';
+export { default as BlessingScanPicExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BlessingScanPicExcelConfigData.json';
+export { default as BlessingScanTypeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BlessingScanTypeExcelConfigData.json';
+export { default as BlossomChestExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BlossomChestExcelConfigData.json';
+export { default as BlossomGroupsExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BlossomGroupsExcelConfigData.json';
+export { default as BlossomOpenExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BlossomOpenExcelConfigData.json';
+export { default as BlossomRefreshExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BlossomRefreshExcelConfigData.json';
+export { default as BlossomReviseExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BlossomReviseExcelConfigData.json';
+export { default as BlossomSectionOrderExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BlossomSectionOrderExcelConfigData.json';
+export { default as BlossomTalkExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BlossomTalkExcelConfigData.json';
+export { default as BonusActivityClientExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BonusActivityClientExcelConfigData.json';
+export { default as BonusActivityExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BonusActivityExcelConfigData.json';
 
 // Books
-export const BooksCodexExcelConfigData = await import('ExcelBinOutput/BooksCodexExcelConfigData.json').then(w => w.default);
-export const BookSuitExcelConfigData = await import('ExcelBinOutput/BookSuitExcelConfigData.json').then(w => w.default);
+export { default as BooksCodexExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BooksCodexExcelConfigData.json';
+export { default as BookSuitExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BookSuitExcelConfigData.json';
 
 //...
-export const BoredActionPriorityExcelConfigData = await import('ExcelBinOutput/BoredActionPriorityExcelConfigData.json').then(w => w.default);
-export const BoredCreateMonsterExcelConfigData = await import('ExcelBinOutput/BoredCreateMonsterExcelConfigData.json').then(w => w.default);
-export const BoredEventExcelConfigData = await import('ExcelBinOutput/BoredEventExcelConfigData.json').then(w => w.default);
-export const BoredMonsterPoolConfigData = await import('ExcelBinOutput/BoredMonsterPoolConfigData.json').then(w => w.default);
-export const BounceConjuringChapterExcelConfigData = await import('ExcelBinOutput/BounceConjuringChapterExcelConfigData.json').then(w => w.default);
-export const BounceConjuringItemExcelConfigData = await import('ExcelBinOutput/BounceConjuringItemExcelConfigData.json').then(w => w.default);
-export const BounceConjuringPreviewExcelConfigData = await import('ExcelBinOutput/BounceConjuringPreviewExcelConfigData.json').then(w => w.default);
-export const BuffExcelConfigData = await import('ExcelBinOutput/BuffExcelConfigData.json').then(w => w.default);
-export const BuffIconExcelConfigData = await import('ExcelBinOutput/BuffIconExcelConfigData.json').then(w => w.default);
-export const BuoyantCombatExcelConfigData = await import('ExcelBinOutput/BuoyantCombatExcelConfigData.json').then(w => w.default);
-export const BuoyantCombatLevelExcelConfigData = await import('ExcelBinOutput/BuoyantCombatLevelExcelConfigData.json').then(w => w.default);
-export const CampExcelConfigData = await import('ExcelBinOutput/CampExcelConfigData.json').then(w => w.default);
-export const ChannellerSlabBuffCostExcelConfigData = await import('ExcelBinOutput/ChannellerSlabBuffCostExcelConfigData.json').then(w => w.default);
-export const ChannellerSlabBuffEnergyExcelConfigData = await import('ExcelBinOutput/ChannellerSlabBuffEnergyExcelConfigData.json').then(w => w.default);
-export const ChannellerSlabBuffExcelConfigData = await import('ExcelBinOutput/ChannellerSlabBuffExcelConfigData.json').then(w => w.default);
-export const ChannellerSlabChapterExcelConfigData = await import('ExcelBinOutput/ChannellerSlabChapterExcelConfigData.json').then(w => w.default);
-export const ChannellerSlabDungeonExcelConfigData = await import('ExcelBinOutput/ChannellerSlabDungeonExcelConfigData.json').then(w => w.default);
-export const ChannellerSlabLevelExcelConfigData = await import('ExcelBinOutput/ChannellerSlabLevelExcelConfigData.json').then(w => w.default);
-export const ChannellerSlabLoopDungeonConditionExcelConfigData = await import('ExcelBinOutput/ChannellerSlabLoopDungeonConditionExcelConfigData.json').then(w => w.default);
-export const ChannellerSlabLoopDungeonDifficultyExcelConfigData = await import('ExcelBinOutput/ChannellerSlabLoopDungeonDifficultyExcelConfigData.json').then(w => w.default);
-export const ChannellerSlabLoopDungeonExcelConfigData = await import('ExcelBinOutput/ChannellerSlabLoopDungeonExcelConfigData.json').then(w => w.default);
-export const ChannellerSlabLoopDungeonPreviewExcelConfigData = await import('ExcelBinOutput/ChannellerSlabLoopDungeonPreviewExcelConfigData.json').then(w => w.default);
-export const ChannellerSlabLoopDungeonRewardExcelConfigData = await import('ExcelBinOutput/ChannellerSlabLoopDungeonRewardExcelConfigData.json').then(w => w.default);
-export const ChannellerSlabPreviewExcelConfigData = await import('ExcelBinOutput/ChannellerSlabPreviewExcelConfigData.json').then(w => w.default);
+export { default as BoredActionPriorityExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BoredActionPriorityExcelConfigData.json';
+export { default as BoredCreateMonsterExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BoredCreateMonsterExcelConfigData.json';
+export { default as BoredEventExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BoredEventExcelConfigData.json';
+export { default as BoredMonsterPoolConfigData } from '../lib/GenshinData/ExcelBinOutput/BoredMonsterPoolConfigData.json';
+export { default as BounceConjuringChapterExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BounceConjuringChapterExcelConfigData.json';
+export { default as BounceConjuringItemExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BounceConjuringItemExcelConfigData.json';
+export { default as BounceConjuringPreviewExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BounceConjuringPreviewExcelConfigData.json';
+export { default as BuffExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BuffExcelConfigData.json';
+export { default as BuffIconExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BuffIconExcelConfigData.json';
+export { default as BuoyantCombatExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BuoyantCombatExcelConfigData.json';
+export { default as BuoyantCombatLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/BuoyantCombatLevelExcelConfigData.json';
+export { default as CampExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CampExcelConfigData.json';
+export { default as ChannellerSlabBuffCostExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChannellerSlabBuffCostExcelConfigData.json';
+export { default as ChannellerSlabBuffEnergyExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChannellerSlabBuffEnergyExcelConfigData.json';
+export { default as ChannellerSlabBuffExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChannellerSlabBuffExcelConfigData.json';
+export { default as ChannellerSlabChapterExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChannellerSlabChapterExcelConfigData.json';
+export { default as ChannellerSlabDungeonExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChannellerSlabDungeonExcelConfigData.json';
+export { default as ChannellerSlabLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChannellerSlabLevelExcelConfigData.json';
+export { default as ChannellerSlabLoopDungeonConditionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChannellerSlabLoopDungeonConditionExcelConfigData.json';
+export { default as ChannellerSlabLoopDungeonDifficultyExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChannellerSlabLoopDungeonDifficultyExcelConfigData.json';
+export { default as ChannellerSlabLoopDungeonExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChannellerSlabLoopDungeonExcelConfigData.json';
+export { default as ChannellerSlabLoopDungeonPreviewExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChannellerSlabLoopDungeonPreviewExcelConfigData.json';
+export { default as ChannellerSlabLoopDungeonRewardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChannellerSlabLoopDungeonRewardExcelConfigData.json';
+export { default as ChannellerSlabPreviewExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChannellerSlabPreviewExcelConfigData.json';
 
 // Chapter
-export const ChapterExcelConfigData = await import('ExcelBinOutput/ChapterExcelConfigData.json').then(w => w.default);
+export { default as ChapterExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChapterExcelConfigData.json';
 
 //...
-export const ChargeBarStyleExcelConfigData = await import('ExcelBinOutput/ChargeBarStyleExcelConfigData.json').then(w => w.default);
-export const ChatExcelConfigData = await import('ExcelBinOutput/ChatExcelConfigData.json').then(w => w.default);
-export const ChestLevelSetConfigData = await import('ExcelBinOutput/ChestLevelSetConfigData.json').then(w => w.default);
+export { default as ChargeBarStyleExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChargeBarStyleExcelConfigData.json';
+export { default as ChatExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ChatExcelConfigData.json';
+export { default as ChestLevelSetConfigData } from '../lib/GenshinData/ExcelBinOutput/ChestLevelSetConfigData.json';
 
 // City
-export const CityConfigData = await import('ExcelBinOutput/CityConfigData.json').then(w => w.default);
-export const CityLevelupConfigData = await import('ExcelBinOutput/CityLevelupConfigData.json').then(w => w.default);
-export const CityTaskOpenExcelConfigData = await import('ExcelBinOutput/CityTaskOpenExcelConfigData.json').then(w => w.default);
+export { default as CityConfigData } from '../lib/GenshinData/ExcelBinOutput/CityConfigData.json';
+export { default as CityLevelupConfigData } from '../lib/GenshinData/ExcelBinOutput/CityLevelupConfigData.json';
+export { default as CityTaskOpenExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CityTaskOpenExcelConfigData.json';
 
 //...
-export const CombineExcelConfigData = await import('ExcelBinOutput/CombineExcelConfigData.json').then(w => w.default);
-export const CompoundExcelConfigData = await import('ExcelBinOutput/CompoundExcelConfigData.json').then(w => w.default);
-export const ConstValueExcelConfigData = await import('ExcelBinOutput/ConstValueExcelConfigData.json').then(w => w.default);
+export { default as CombineExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CombineExcelConfigData.json';
+export { default as CompoundExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CompoundExcelConfigData.json';
+export { default as ConstValueExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ConstValueExcelConfigData.json';
+*/
 
 // Cook
-export const CookBonusExcelConfigData = await import('ExcelBinOutput/CookBonusExcelConfigData.json').then(w => w.default);
-export const CookRecipeExcelConfigData = await import('ExcelBinOutput/CookRecipeExcelConfigData.json').then(w => w.default);
+export { default as CookBonusExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CookBonusExcelConfigData.json';
+export { default as CookRecipeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CookRecipeExcelConfigData.json';
 
+/*
 //...
-export const CoopActivityExcelConfigData = await import('ExcelBinOutput/CoopActivityExcelConfigData.json').then(w => w.default);
-export const CoopCGExcelConfigData = await import('ExcelBinOutput/CoopCGExcelConfigData.json').then(w => w.default);
-export const CoopChapterExcelConfigData = await import('ExcelBinOutput/CoopChapterExcelConfigData.json').then(w => w.default);
-export const CoopExcelConfigData = await import('ExcelBinOutput/CoopExcelConfigData.json').then(w => w.default);
-export const CoopInteractionExcelConfigData = await import('ExcelBinOutput/CoopInteractionExcelConfigData.json').then(w => w.default);
-export const CoopPointExcelConfigData = await import('ExcelBinOutput/CoopPointExcelConfigData.json').then(w => w.default);
-export const CoopRewardExcelConfigData = await import('ExcelBinOutput/CoopRewardExcelConfigData.json').then(w => w.default);
-export const CutsceneExcelConfigData = await import('ExcelBinOutput/CutsceneExcelConfigData.json').then(w => w.default);
-export const DailyDungeonConfigData = await import('ExcelBinOutput/DailyDungeonConfigData.json').then(w => w.default);
-export const DailyTaskExcelConfigData = await import('ExcelBinOutput/DailyTaskExcelConfigData.json').then(w => w.default);
-export const DailyTaskLevelExcelConfigData = await import('ExcelBinOutput/DailyTaskLevelExcelConfigData.json').then(w => w.default);
-export const DailyTaskRewardExcelConfigData = await import('ExcelBinOutput/DailyTaskRewardExcelConfigData.json').then(w => w.default);
-export const DialogExcelConfigData = await import('ExcelBinOutput/DialogExcelConfigData.json').then(w => w.default);
-export const DialogSelectTimeOutExcelConfigData = await import('ExcelBinOutput/DialogSelectTimeOutExcelConfigData.json').then(w => w.default);
-export const DieTypeTipsExcelConfigData = await import('ExcelBinOutput/DieTypeTipsExcelConfigData.json').then(w => w.default);
-export const DisplayItemExcelConfigData = await import('ExcelBinOutput/DisplayItemExcelConfigData.json').then(w => w.default);
-export const DocumentExcelConfigData = await import('ExcelBinOutput/DocumentExcelConfigData.json').then(w => w.default);
-export const DraftExcelConfigData = await import('ExcelBinOutput/DraftExcelConfigData.json').then(w => w.default);
-export const DraftTextDataExcelConfigData = await import('ExcelBinOutput/DraftTextDataExcelConfigData.json').then(w => w.default);
-export const DragonSpineEnhanceExcelConfigData = await import('ExcelBinOutput/DragonSpineEnhanceExcelConfigData.json').then(w => w.default);
-export const DragonSpineMissionExcelConfigData = await import('ExcelBinOutput/DragonSpineMissionExcelConfigData.json').then(w => w.default);
-export const DragonSpinePreviewExcelConfigData = await import('ExcelBinOutput/DragonSpinePreviewExcelConfigData.json').then(w => w.default);
-export const DragonSpineStageExcelConfigData = await import('ExcelBinOutput/DragonSpineStageExcelConfigData.json').then(w => w.default);
-export const DungeonChallengeConfigData = await import('ExcelBinOutput/DungeonChallengeConfigData.json').then(w => w.default);
-export const DungeonElementChallengeExcelConfigData = await import('ExcelBinOutput/DungeonElementChallengeExcelConfigData.json').then(w => w.default);
-export const DungeonEntryExcelConfigData = await import('ExcelBinOutput/DungeonEntryExcelConfigData.json').then(w => w.default);
-export const DungeonExcelConfigData = await import('ExcelBinOutput/DungeonExcelConfigData.json').then(w => w.default);
-export const DungeonLevelEntityConfigData = await import('ExcelBinOutput/DungeonLevelEntityConfigData.json').then(w => w.default);
-export const DungeonMapAreaExcelConfigData = await import('ExcelBinOutput/DungeonMapAreaExcelConfigData.json').then(w => w.default);
-export const DungeonPassExcelConfigData = await import('ExcelBinOutput/DungeonPassExcelConfigData.json').then(w => w.default);
-export const DungeonRosterConfigData = await import('ExcelBinOutput/DungeonRosterConfigData.json').then(w => w.default);
-export const DungeonSerialConfigData = await import('ExcelBinOutput/DungeonSerialConfigData.json').then(w => w.default);
-export const DynamicInteractionExcelConfigData = await import('ExcelBinOutput/DynamicInteractionExcelConfigData.json').then(w => w.default);
-export const EchoShellExcelConfigData = await import('ExcelBinOutput/EchoShellExcelConfigData.json').then(w => w.default);
-export const EchoShellFloatSignalExcelConfigData = await import('ExcelBinOutput/EchoShellFloatSignalExcelConfigData.json').then(w => w.default);
-export const EchoShellRewardExcelConfigData = await import('ExcelBinOutput/EchoShellRewardExcelConfigData.json').then(w => w.default);
-export const EchoShellStoryExcelConfigData = await import('ExcelBinOutput/EchoShellStoryExcelConfigData.json').then(w => w.default);
-export const EffigyChallengeExcelConfigData = await import('ExcelBinOutput/EffigyChallengeExcelConfigData.json').then(w => w.default);
-export const EffigyDifficultyExcelConfigData = await import('ExcelBinOutput/EffigyDifficultyExcelConfigData.json').then(w => w.default);
-export const EffigyLimitingConditionExcelConfigData = await import('ExcelBinOutput/EffigyLimitingConditionExcelConfigData.json').then(w => w.default);
-export const EffigyRewardExcelConfigData = await import('ExcelBinOutput/EffigyRewardExcelConfigData.json').then(w => w.default);
-export const ElementCoeffExcelConfigData = await import('ExcelBinOutput/ElementCoeffExcelConfigData.json').then(w => w.default);
-export const ElementStateExcelConfigData = await import('ExcelBinOutput/ElementStateExcelConfigData.json').then(w => w.default);
-export const EmbeddedTextMapConfigData = await import('ExcelBinOutput/EmbeddedTextMapConfigData.json').then(w => w.default);
-export const EmotionTemplateExcelConfigData = await import('ExcelBinOutput/EmotionTemplateExcelConfigData.json').then(w => w.default);
-export const EndureTemplateExcelConfigData = await import('ExcelBinOutput/EndureTemplateExcelConfigData.json').then(w => w.default);
-export const EntityMultiPlayerExcelConfigData = await import('ExcelBinOutput/EntityMultiPlayerExcelConfigData.json').then(w => w.default);
-export const EnvAnimalGatherExcelConfigData = await import('ExcelBinOutput/EnvAnimalGatherExcelConfigData.json').then(w => w.default);
-export const EnvAnimalWeightExcelConfigData = await import('ExcelBinOutput/EnvAnimalWeightExcelConfigData.json').then(w => w.default);
-export const EquipAffixExcelConfigData = await import('ExcelBinOutput/EquipAffixExcelConfigData.json').then(w => w.default);
-export const ExhibitionCardExcelConfigData = await import('ExcelBinOutput/ExhibitionCardExcelConfigData.json').then(w => w.default);
-export const ExhibitionScoreExcelConfigData = await import('ExcelBinOutput/ExhibitionScoreExcelConfigData.json').then(w => w.default);
-export const ExpeditionActivityMarkerExcelConfigData = await import('ExcelBinOutput/ExpeditionActivityMarkerExcelConfigData.json').then(w => w.default);
-export const ExpeditionBonusExcelConfigData = await import('ExcelBinOutput/ExpeditionBonusExcelConfigData.json').then(w => w.default);
-export const ExpeditionChallengeExcelConfigData = await import('ExcelBinOutput/ExpeditionChallengeExcelConfigData.json').then(w => w.default);
-export const ExpeditionDataExcelConfigData = await import('ExcelBinOutput/ExpeditionDataExcelConfigData.json').then(w => w.default);
-export const ExpeditionDifficultyExcelConfigData = await import('ExcelBinOutput/ExpeditionDifficultyExcelConfigData.json').then(w => w.default);
-export const ExpeditionPathExcelConfigData = await import('ExcelBinOutput/ExpeditionPathExcelConfigData.json').then(w => w.default);
-export const ExploreAreaTotalExpExcelConfigData = await import('ExcelBinOutput/ExploreAreaTotalExpExcelConfigData.json').then(w => w.default);
-export const ExploreExcelConfigData = await import('ExcelBinOutput/ExploreExcelConfigData.json').then(w => w.default);
+export { default as CoopActivityExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CoopActivityExcelConfigData.json';
+export { default as CoopCGExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CoopCGExcelConfigData.json';
+export { default as CoopChapterExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CoopChapterExcelConfigData.json';
+export { default as CoopExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CoopExcelConfigData.json';
+export { default as CoopInteractionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CoopInteractionExcelConfigData.json';
+export { default as CoopPointExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CoopPointExcelConfigData.json';
+export { default as CoopRewardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CoopRewardExcelConfigData.json';
+export { default as CutsceneExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CutsceneExcelConfigData.json';
+export { default as DailyDungeonConfigData } from '../lib/GenshinData/ExcelBinOutput/DailyDungeonConfigData.json';
+export { default as DailyTaskExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DailyTaskExcelConfigData.json';
+export { default as DailyTaskLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DailyTaskLevelExcelConfigData.json';
+export { default as DailyTaskRewardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DailyTaskRewardExcelConfigData.json';
+export { default as DialogExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DialogExcelConfigData.json';
+export { default as DialogSelectTimeOutExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DialogSelectTimeOutExcelConfigData.json';
+export { default as DieTypeTipsExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DieTypeTipsExcelConfigData.json';
+export { default as DisplayItemExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DisplayItemExcelConfigData.json';
+export { default as DocumentExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DocumentExcelConfigData.json';
+export { default as DraftExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DraftExcelConfigData.json';
+export { default as DraftTextDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DraftTextDataExcelConfigData.json';
+export { default as DragonSpineEnhanceExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DragonSpineEnhanceExcelConfigData.json';
+export { default as DragonSpineMissionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DragonSpineMissionExcelConfigData.json';
+export { default as DragonSpinePreviewExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DragonSpinePreviewExcelConfigData.json';
+export { default as DragonSpineStageExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DragonSpineStageExcelConfigData.json';
+export { default as DungeonChallengeConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonChallengeConfigData.json';
+export { default as DungeonElementChallengeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonElementChallengeExcelConfigData.json';
+export { default as DungeonEntryExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonEntryExcelConfigData.json';
+export { default as DungeonExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonExcelConfigData.json';
+export { default as DungeonLevelEntityConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonLevelEntityConfigData.json';
+export { default as DungeonMapAreaExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonMapAreaExcelConfigData.json';
+export { default as DungeonPassExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonPassExcelConfigData.json';
+export { default as DungeonRosterConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonRosterConfigData.json';
+export { default as DungeonSerialConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonSerialConfigData.json';
+export { default as DynamicInteractionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DynamicInteractionExcelConfigData.json';
+export { default as EchoShellExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EchoShellExcelConfigData.json';
+export { default as EchoShellFloatSignalExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EchoShellFloatSignalExcelConfigData.json';
+export { default as EchoShellRewardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EchoShellRewardExcelConfigData.json';
+export { default as EchoShellStoryExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EchoShellStoryExcelConfigData.json';
+export { default as EffigyChallengeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EffigyChallengeExcelConfigData.json';
+export { default as EffigyDifficultyExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EffigyDifficultyExcelConfigData.json';
+export { default as EffigyLimitingConditionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EffigyLimitingConditionExcelConfigData.json';
+export { default as EffigyRewardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EffigyRewardExcelConfigData.json';
+export { default as ElementCoeffExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ElementCoeffExcelConfigData.json';
+export { default as ElementStateExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ElementStateExcelConfigData.json';
+export { default as EmbeddedTextMapConfigData } from '../lib/GenshinData/ExcelBinOutput/EmbeddedTextMapConfigData.json';
+export { default as EmotionTemplateExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EmotionTemplateExcelConfigData.json';
+export { default as EndureTemplateExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EndureTemplateExcelConfigData.json';
+export { default as EntityMultiPlayerExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EntityMultiPlayerExcelConfigData.json';
+export { default as EnvAnimalGatherExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EnvAnimalGatherExcelConfigData.json';
+export { default as EnvAnimalWeightExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EnvAnimalWeightExcelConfigData.json';
+export { default as EquipAffixExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EquipAffixExcelConfigData.json';
+export { default as ExhibitionCardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExhibitionCardExcelConfigData.json';
+export { default as ExhibitionScoreExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExhibitionScoreExcelConfigData.json';
+export { default as ExpeditionActivityMarkerExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExpeditionActivityMarkerExcelConfigData.json';
+export { default as ExpeditionBonusExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExpeditionBonusExcelConfigData.json';
+export { default as ExpeditionChallengeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExpeditionChallengeExcelConfigData.json';
+export { default as ExpeditionDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExpeditionDataExcelConfigData.json';
+export { default as ExpeditionDifficultyExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExpeditionDifficultyExcelConfigData.json';
+export { default as ExpeditionPathExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExpeditionPathExcelConfigData.json';
+export { default as ExploreAreaTotalExpExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExploreAreaTotalExpExcelConfigData.json';
+export { default as ExploreExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExploreExcelConfigData.json';
 
 // Features
-export const FeatureTagExcelConfigData = await import('ExcelBinOutput/FeatureTagExcelConfigData.json').then(w => w.default);
-export const FeatureTagGroupExcelConfigData = await import('ExcelBinOutput/FeatureTagGroupExcelConfigData.json').then(w => w.default);
+export { default as FeatureTagExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FeatureTagExcelConfigData.json';
+export { default as FeatureTagGroupExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FeatureTagGroupExcelConfigData.json';
 
 //...
-export const FetterCharacterCardExcelConfigData = await import('ExcelBinOutput/FetterCharacterCardExcelConfigData.json').then(w => w.default);
-export const FetterInfoExcelConfigData = await import('ExcelBinOutput/FetterInfoExcelConfigData.json').then(w => w.default);
-export const FettersExcelConfigData = await import('ExcelBinOutput/FettersExcelConfigData.json').then(w => w.default);
-export const FetterStoryExcelConfigData = await import('ExcelBinOutput/FetterStoryExcelConfigData.json').then(w => w.default);
-export const FindHilichurlAssignmentExcelConfigData = await import('ExcelBinOutput/FindHilichurlAssignmentExcelConfigData.json').then(w => w.default);
-export const FindHilichurlExcelConfigData = await import('ExcelBinOutput/FindHilichurlExcelConfigData.json').then(w => w.default);
-export const FindHilichurlHiliWeiExcelConfigData = await import('ExcelBinOutput/FindHilichurlHiliWeiExcelConfigData.json').then(w => w.default);
-export const FleurFairBuffEnergyStatExcelConfigData = await import('ExcelBinOutput/FleurFairBuffEnergyStatExcelConfigData.json').then(w => w.default);
-export const FleurFairChapterExcelConfigData = await import('ExcelBinOutput/FleurFairChapterExcelConfigData.json').then(w => w.default);
-export const FleurFairDungeonExcelConfigData = await import('ExcelBinOutput/FleurFairDungeonExcelConfigData.json').then(w => w.default);
-export const FleurFairDungeonStatExcelConfigData = await import('ExcelBinOutput/FleurFairDungeonStatExcelConfigData.json').then(w => w.default);
-export const FleurFairMiniGameExcelConfigData = await import('ExcelBinOutput/FleurFairMiniGameExcelConfigData.json').then(w => w.default);
-export const FleurFairPreviewExcelConfigData = await import('ExcelBinOutput/FleurFairPreviewExcelConfigData.json').then(w => w.default);
-export const FleurFairTipsExcelConfigData = await import('ExcelBinOutput/FleurFairTipsExcelConfigData.json').then(w => w.default);
-export const FlightActivityDayExcelConfigData = await import('ExcelBinOutput/FlightActivityDayExcelConfigData.json').then(w => w.default);
-export const FlightActivityExcelConfigData = await import('ExcelBinOutput/FlightActivityExcelConfigData.json').then(w => w.default);
-export const FlightActivityMedalExcelConfigData = await import('ExcelBinOutput/FlightActivityMedalExcelConfigData.json').then(w => w.default);
-export const ForgeExcelConfigData = await import('ExcelBinOutput/ForgeExcelConfigData.json').then(w => w.default);
-export const ForgeRandomExcelConfigData = await import('ExcelBinOutput/ForgeRandomExcelConfigData.json').then(w => w.default);
-export const ForgeUpdateExcelConfigData = await import('ExcelBinOutput/ForgeUpdateExcelConfigData.json').then(w => w.default);
-export const FurnitureMakeExcelConfigData = await import('ExcelBinOutput/FurnitureMakeExcelConfigData.json').then(w => w.default);
-export const FurnitureSuiteExcelConfigData = await import('ExcelBinOutput/FurnitureSuiteExcelConfigData.json').then(w => w.default);
+export { default as FetterCharacterCardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FetterCharacterCardExcelConfigData.json';
+export { default as FettersExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FettersExcelConfigData.json';
+export { default as FetterStoryExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FetterStoryExcelConfigData.json';
+export { default as FindHilichurlAssignmentExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FindHilichurlAssignmentExcelConfigData.json';
+export { default as FindHilichurlExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FindHilichurlExcelConfigData.json';
+export { default as FindHilichurlHiliWeiExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FindHilichurlHiliWeiExcelConfigData.json';
+export { default as FleurFairBuffEnergyStatExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FleurFairBuffEnergyStatExcelConfigData.json';
+export { default as FleurFairChapterExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FleurFairChapterExcelConfigData.json';
+export { default as FleurFairDungeonExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FleurFairDungeonExcelConfigData.json';
+export { default as FleurFairDungeonStatExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FleurFairDungeonStatExcelConfigData.json';
+export { default as FleurFairMiniGameExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FleurFairMiniGameExcelConfigData.json';
+export { default as FleurFairPreviewExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FleurFairPreviewExcelConfigData.json';
+export { default as FleurFairTipsExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FleurFairTipsExcelConfigData.json';
+export { default as FlightActivityDayExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FlightActivityDayExcelConfigData.json';
+export { default as FlightActivityExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FlightActivityExcelConfigData.json';
+export { default as FlightActivityMedalExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FlightActivityMedalExcelConfigData.json';
+export { default as ForgeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ForgeExcelConfigData.json';
+export { default as ForgeRandomExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ForgeRandomExcelConfigData.json';
+export { default as ForgeUpdateExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ForgeUpdateExcelConfigData.json';
+export { default as FurnitureMakeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FurnitureMakeExcelConfigData.json';
+export { default as FurnitureSuiteExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/FurnitureSuiteExcelConfigData.json';
 
 // Gadget
-export const GadgetChainExcelConfigData = await import('ExcelBinOutput/GadgetChainExcelConfigData.json').then(w => w.default);
-export const GadgetCurveExcelConfigData = await import('ExcelBinOutput/GadgetCurveExcelConfigData.json').then(w => w.default);
-export const GadgetExcelConfigData = await import('ExcelBinOutput/GadgetExcelConfigData.json').then(w => w.default);
-export const GadgetGuestExcelConfigData = await import('ExcelBinOutput/GadgetGuestExcelConfigData.json').then(w => w.default);
-export const GadgetInteractExcelConfigData = await import('ExcelBinOutput/GadgetInteractExcelConfigData.json').then(w => w.default);
-export const GadgetPropExcelConfigData = await import('ExcelBinOutput/GadgetPropExcelConfigData.json').then(w => w.default);
-export const GadgetTitleExcelConfigData = await import('ExcelBinOutput/GadgetTitleExcelConfigData.json').then(w => w.default);
+export { default as GadgetChainExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GadgetChainExcelConfigData.json';
+export { default as GadgetCurveExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GadgetCurveExcelConfigData.json';
+export { default as GadgetExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GadgetExcelConfigData.json';
+export { default as GadgetGuestExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GadgetGuestExcelConfigData.json';
+export { default as GadgetInteractExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GadgetInteractExcelConfigData.json';
+export { default as GadgetPropExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GadgetPropExcelConfigData.json';
+export { default as GadgetTitleExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GadgetTitleExcelConfigData.json';
 
 //...
-export const GalleryExcelConfigData = await import('ExcelBinOutput/GalleryExcelConfigData.json').then(w => w.default);
-export const GatherBundleExcelConfigData = await import('ExcelBinOutput/GatherBundleExcelConfigData.json').then(w => w.default);
-export const GatherExcelConfigData = await import('ExcelBinOutput/GatherExcelConfigData.json').then(w => w.default);
-export const GeneralRewardExcelConfigData = await import('ExcelBinOutput/GeneralRewardExcelConfigData.json').then(w => w.default);
-export const GivingExcelConfigData = await import('ExcelBinOutput/GivingExcelConfigData.json').then(w => w.default);
-export const GivingGroupExcelConfigData = await import('ExcelBinOutput/GivingGroupExcelConfigData.json').then(w => w.default);
-export const GlobalWatcherConfigData = await import('ExcelBinOutput/GlobalWatcherConfigData.json').then(w => w.default);
-export const GuideRatingExcelConfigData = await import('ExcelBinOutput/GuideRatingExcelConfigData.json').then(w => w.default);
-export const GuideTriggerExcelConfigData = await import('ExcelBinOutput/GuideTriggerExcelConfigData.json').then(w => w.default);
-export const H5ActivityExcelConfigData = await import('ExcelBinOutput/H5ActivityExcelConfigData.json').then(w => w.default);
-export const H5ActivityWatcherExcelConfigData = await import('ExcelBinOutput/H5ActivityWatcherExcelConfigData.json').then(w => w.default);
-export const HideAndSeekMatchExcelConfigData = await import('ExcelBinOutput/HideAndSeekMatchExcelConfigData.json').then(w => w.default);
-export const HideAndSeekSkillExcelConfigData = await import('ExcelBinOutput/HideAndSeekSkillExcelConfigData.json').then(w => w.default);
-export const HitLevelTemplateExcelConfigData = await import('ExcelBinOutput/HitLevelTemplateExcelConfigData.json').then(w => w.default);
+export { default as GalleryExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GalleryExcelConfigData.json';
+export { default as GatherBundleExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GatherBundleExcelConfigData.json';
+export { default as GatherExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GatherExcelConfigData.json';
+export { default as GeneralRewardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GeneralRewardExcelConfigData.json';
+export { default as GivingExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GivingExcelConfigData.json';
+export { default as GivingGroupExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GivingGroupExcelConfigData.json';
+export { default as GlobalWatcherConfigData } from '../lib/GenshinData/ExcelBinOutput/GlobalWatcherConfigData.json';
+export { default as GuideRatingExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GuideRatingExcelConfigData.json';
+export { default as GuideTriggerExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/GuideTriggerExcelConfigData.json';
+export { default as H5ActivityExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/H5ActivityExcelConfigData.json';
+export { default as H5ActivityWatcherExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/H5ActivityWatcherExcelConfigData.json';
+export { default as HideAndSeekMatchExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HideAndSeekMatchExcelConfigData.json';
+export { default as HideAndSeekSkillExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HideAndSeekSkillExcelConfigData.json';
+export { default as HitLevelTemplateExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HitLevelTemplateExcelConfigData.json';
 
 // Homeworld = Housing
-export const HomeworldAnimalExcelConfigData = await import('ExcelBinOutput/HomeworldAnimalExcelConfigData.json').then(w => w.default);
-export const HomeWorldAreaComfortExcelConfigData = await import('ExcelBinOutput/HomeWorldAreaComfortExcelConfigData.json').then(w => w.default);
-export const HomeWorldCameraExcelConfigData = await import('ExcelBinOutput/HomeWorldCameraExcelConfigData.json').then(w => w.default);
-export const HomeWorldComfortLevelExcelConfigData = await import('ExcelBinOutput/HomeWorldComfortLevelExcelConfigData.json').then(w => w.default);
-export const HomeWorldEventExcelConfigData = await import('ExcelBinOutput/HomeWorldEventExcelConfigData.json').then(w => w.default);
-export const HomeworldFurnitureDeployRulesetData = await import('ExcelBinOutput/HomeworldFurnitureDeployRulesetData.json').then(w => w.default);
-export const HomeWorldFurnitureExcelConfigData = await import('ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json').then(w => w.default);
-export const HomeWorldFurnitureTypeExcelConfigData = await import('ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json').then(w => w.default);
-export const HomeWorldInteractiveNPCExcelConfigData = await import('ExcelBinOutput/HomeWorldInteractiveNPCExcelConfigData.json').then(w => w.default);
-export const HomeWorldLeastShopExcelConfigData = await import('ExcelBinOutput/HomeWorldLeastShopExcelConfigData.json').then(w => w.default);
-export const HomeworldLevelExcelConfigData = await import('ExcelBinOutput/HomeworldLevelExcelConfigData.json').then(w => w.default);
-export const HomeWorldLimitShopExcelConfigData = await import('ExcelBinOutput/HomeWorldLimitShopExcelConfigData.json').then(w => w.default);
-export const HomeworldModuleExcelConfigData = await import('ExcelBinOutput/HomeworldModuleExcelConfigData.json').then(w => w.default);
-export const HomeworldNPCExcelDataData = await import('ExcelBinOutput/HomeworldNPCExcelDataData.json').then(w => w.default);
-export const HomeWorldShopSubTagExcelConfigData = await import('ExcelBinOutput/HomeWorldShopSubTagExcelConfigData.json').then(w => w.default);
-export const HomeWorldSpecialFurnitureExcelConfigData = await import('ExcelBinOutput/HomeWorldSpecialFurnitureExcelConfigData.json').then(w => w.default);
+export { default as HomeworldAnimalExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeworldAnimalExcelConfigData.json';
+export { default as HomeWorldAreaComfortExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeWorldAreaComfortExcelConfigData.json';
+export { default as HomeWorldCameraExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeWorldCameraExcelConfigData.json';
+export { default as HomeWorldComfortLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeWorldComfortLevelExcelConfigData.json';
+export { default as HomeWorldEventExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeWorldEventExcelConfigData.json';
+export { default as HomeworldFurnitureDeployRulesetData } from '../lib/GenshinData/ExcelBinOutput/HomeworldFurnitureDeployRulesetData.json';
+export { default as HomeWorldFurnitureExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeWorldFurnitureExcelConfigData.json';
+export { default as HomeWorldFurnitureTypeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeWorldFurnitureTypeExcelConfigData.json';
+export { default as HomeWorldInteractiveNPCExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeWorldInteractiveNPCExcelConfigData.json';
+export { default as HomeWorldLeastShopExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeWorldLeastShopExcelConfigData.json';
+export { default as HomeworldLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeworldLevelExcelConfigData.json';
+export { default as HomeWorldLimitShopExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeWorldLimitShopExcelConfigData.json';
+export { default as HomeworldModuleExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeworldModuleExcelConfigData.json';
+export { default as HomeworldNPCExcelDataData } from '../lib/GenshinData/ExcelBinOutput/HomeworldNPCExcelDataData.json';
+export { default as HomeWorldShopSubTagExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeWorldShopSubTagExcelConfigData.json';
+export { default as HomeWorldSpecialFurnitureExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HomeWorldSpecialFurnitureExcelConfigData.json';
 
 //...
-export const HuntingClueGatherExcelConfigData = await import('ExcelBinOutput/HuntingClueGatherExcelConfigData.json').then(w => w.default);
-export const HuntingClueMonsterExcelConfigData = await import('ExcelBinOutput/HuntingClueMonsterExcelConfigData.json').then(w => w.default);
-export const HuntingClueTextExcelConfigData = await import('ExcelBinOutput/HuntingClueTextExcelConfigData.json').then(w => w.default);
-export const HuntingGroupInfoExcelConfigData = await import('ExcelBinOutput/HuntingGroupInfoExcelConfigData.json').then(w => w.default);
-export const HuntingMonsterExcelConfigData = await import('ExcelBinOutput/HuntingMonsterExcelConfigData.json').then(w => w.default);
-export const HuntingRefreshExcelConfigData = await import('ExcelBinOutput/HuntingRefreshExcelConfigData.json').then(w => w.default);
-export const HuntingRegionExcelConfigData = await import('ExcelBinOutput/HuntingRegionExcelConfigData.json').then(w => w.default);
-export const IconAdsorbEffectExcelConfigData = await import('ExcelBinOutput/IconAdsorbEffectExcelConfigData.json').then(w => w.default);
-export const InvestigationConfigData = await import('ExcelBinOutput/InvestigationConfigData.json').then(w => w.default);
-export const InvestigationDungeonConfigData = await import('ExcelBinOutput/InvestigationDungeonConfigData.json').then(w => w.default);
-export const InvestigationMonsterConfigData = await import('ExcelBinOutput/InvestigationMonsterConfigData.json').then(w => w.default);
-export const InvestigationTargetConfigData = await import('ExcelBinOutput/InvestigationTargetConfigData.json').then(w => w.default);
-export const LampContributionExcelConfigData = await import('ExcelBinOutput/LampContributionExcelConfigData.json').then(w => w.default);
-export const LampPhaseExcelConfigData = await import('ExcelBinOutput/LampPhaseExcelConfigData.json').then(w => w.default);
-export const LampProgressControlConfigData = await import('ExcelBinOutput/LampProgressControlConfigData.json').then(w => w.default);
-export const LampRegionDataConfigData = await import('ExcelBinOutput/LampRegionDataConfigData.json').then(w => w.default);
-export const LandSoundExcelConfigData = await import('ExcelBinOutput/LandSoundExcelConfigData.json').then(w => w.default);
-export const LevelSuppressExcelConfigData = await import('ExcelBinOutput/LevelSuppressExcelConfigData.json').then(w => w.default);
-export const LimitRegionExcelConfigData = await import('ExcelBinOutput/LimitRegionExcelConfigData.json').then(w => w.default);
-export const LoadingSituationExcelConfigData = await import('ExcelBinOutput/LoadingSituationExcelConfigData.json').then(w => w.default);
-export const LoadingTipsExcelConfigData = await import('ExcelBinOutput/LoadingTipsExcelConfigData.json').then(w => w.default);
-export const LocalizationExcelConfigData = await import('ExcelBinOutput/LocalizationExcelConfigData.json').then(w => w.default);
-export const LockTemplateExcelConfigData = await import('ExcelBinOutput/LockTemplateExcelConfigData.json').then(w => w.default);
-export const MailExcelConfigData = await import('ExcelBinOutput/MailExcelConfigData.json').then(w => w.default);
-export const MainCoopExcelConfigData = await import('ExcelBinOutput/MainCoopExcelConfigData.json').then(w => w.default);
-export const MainQuestExcelConfigData = await import('ExcelBinOutput/MainQuestExcelConfigData.json').then(w => w.default);
-export const ManualTextMapConfigData = await import('ExcelBinOutput/ManualTextMapConfigData.json').then(w => w.default);
-export const MapTagDataConfigData = await import('ExcelBinOutput/MapTagDataConfigData.json').then(w => w.default);
-export const MatchExcelConfigData = await import('ExcelBinOutput/MatchExcelConfigData.json').then(w => w.default);
-export const MatchingTextDataExcelConfigData = await import('ExcelBinOutput/MatchingTextDataExcelConfigData.json').then(w => w.default);
-export const MatchPunishExcelConfigData = await import('ExcelBinOutput/MatchPunishExcelConfigData.json').then(w => w.default);
+export { default as HuntingClueGatherExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HuntingClueGatherExcelConfigData.json';
+export { default as HuntingClueMonsterExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HuntingClueMonsterExcelConfigData.json';
+export { default as HuntingClueTextExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HuntingClueTextExcelConfigData.json';
+export { default as HuntingGroupInfoExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HuntingGroupInfoExcelConfigData.json';
+export { default as HuntingMonsterExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HuntingMonsterExcelConfigData.json';
+export { default as HuntingRefreshExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HuntingRefreshExcelConfigData.json';
+export { default as HuntingRegionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/HuntingRegionExcelConfigData.json';
+export { default as IconAdsorbEffectExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/IconAdsorbEffectExcelConfigData.json';
+export { default as InvestigationConfigData } from '../lib/GenshinData/ExcelBinOutput/InvestigationConfigData.json';
+export { default as InvestigationDungeonConfigData } from '../lib/GenshinData/ExcelBinOutput/InvestigationDungeonConfigData.json';
+export { default as InvestigationMonsterConfigData } from '../lib/GenshinData/ExcelBinOutput/InvestigationMonsterConfigData.json';
+export { default as InvestigationTargetConfigData } from '../lib/GenshinData/ExcelBinOutput/InvestigationTargetConfigData.json';
+export { default as LampContributionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/LampContributionExcelConfigData.json';
+export { default as LampPhaseExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/LampPhaseExcelConfigData.json';
+export { default as LampProgressControlConfigData } from '../lib/GenshinData/ExcelBinOutput/LampProgressControlConfigData.json';
+export { default as LampRegionDataConfigData } from '../lib/GenshinData/ExcelBinOutput/LampRegionDataConfigData.json';
+export { default as LandSoundExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/LandSoundExcelConfigData.json';
+export { default as LevelSuppressExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/LevelSuppressExcelConfigData.json';
+export { default as LimitRegionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/LimitRegionExcelConfigData.json';
+export { default as LoadingSituationExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/LoadingSituationExcelConfigData.json';
+export { default as LoadingTipsExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/LoadingTipsExcelConfigData.json';
+export { default as LocalizationExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/LocalizationExcelConfigData.json';
+export { default as LockTemplateExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/LockTemplateExcelConfigData.json';
+export { default as MailExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MailExcelConfigData.json';
+export { default as MainCoopExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MainCoopExcelConfigData.json';
+export { default as MainQuestExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MainQuestExcelConfigData.json';
+export { default as ManualTextMapConfigData } from '../lib/GenshinData/ExcelBinOutput/ManualTextMapConfigData.json';
+export { default as MapTagDataConfigData } from '../lib/GenshinData/ExcelBinOutput/MapTagDataConfigData.json';
+export { default as MatchExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MatchExcelConfigData.json';
+export { default as MatchingTextDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MatchingTextDataExcelConfigData.json';
+export { default as MatchPunishExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MatchPunishExcelConfigData.json';
 
+*/
 // Materials
-export const MaterialCodexExcelConfigData = await import('ExcelBinOutput/MaterialCodexExcelConfigData.json').then(w => w.default);
-export const MaterialExcelConfigData = await import('ExcelBinOutput/MaterialExcelConfigData.json').then(w => w.default);
-export const MaterialSourceDataExcelConfigData = await import('ExcelBinOutput/MaterialSourceDataExcelConfigData.converted.json').then(w => w.default);
+export { default as MaterialCodexExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MaterialCodexExcelConfigData.json';
+export { default as MaterialExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MaterialExcelConfigData.json';
+export { default as MaterialSourceDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MaterialSourceDataExcelConfigData.converted.json';
 
+
+/*
 //...
-export const MechanicBuildingExcelConfigData = await import('ExcelBinOutput/MechanicBuildingExcelConfigData.json').then(w => w.default);
-export const MechanicusCardCurseExcelConfigData = await import('ExcelBinOutput/MechanicusCardCurseExcelConfigData.json').then(w => w.default);
-export const MechanicusCardEffectExcelConfigData = await import('ExcelBinOutput/MechanicusCardEffectExcelConfigData.json').then(w => w.default);
-export const MechanicusCardExcelConfigData = await import('ExcelBinOutput/MechanicusCardExcelConfigData.json').then(w => w.default);
-export const MechanicusDifficultyExcelConfigData = await import('ExcelBinOutput/MechanicusDifficultyExcelConfigData.json').then(w => w.default);
-export const MechanicusExcelConfigData = await import('ExcelBinOutput/MechanicusExcelConfigData.json').then(w => w.default);
-export const MechanicusGearLevelUpExcelConfigData = await import('ExcelBinOutput/MechanicusGearLevelUpExcelConfigData.json').then(w => w.default);
-export const MechanicusMapExcelConfigData = await import('ExcelBinOutput/MechanicusMapExcelConfigData.json').then(w => w.default);
-export const MechanicusMapPointExcelConfigData = await import('ExcelBinOutput/MechanicusMapPointExcelConfigData.json').then(w => w.default);
-export const MechanicusSequenceExcelConfigData = await import('ExcelBinOutput/MechanicusSequenceExcelConfigData.json').then(w => w.default);
-export const MechanicusWatcherExcelConfigData = await import('ExcelBinOutput/MechanicusWatcherExcelConfigData.json').then(w => w.default);
-export const MiracleRingDropExcelConfigData = await import('ExcelBinOutput/MiracleRingDropExcelConfigData.json').then(w => w.default);
-export const MiracleRingExcelConfigData = await import('ExcelBinOutput/MiracleRingExcelConfigData.json').then(w => w.default);
-export const MonsterAffixExcelConfigData = await import('ExcelBinOutput/MonsterAffixExcelConfigData.json').then(w => w.default);
-export const MonsterCurveExcelConfigData = await import('ExcelBinOutput/MonsterCurveExcelConfigData.json').then(w => w.default);
-export const MonsterDescribeExcelConfigData = await import('ExcelBinOutput/MonsterDescribeExcelConfigData.json').then(w => w.default);
-export const MonsterExcelConfigData = await import('ExcelBinOutput/MonsterExcelConfigData.json').then(w => w.default);
-export const MonsterMultiPlayerExcelConfigData = await import('ExcelBinOutput/MonsterMultiPlayerExcelConfigData.json').then(w => w.default);
-export const MonsterRelationshipExcelConfigData = await import('ExcelBinOutput/MonsterRelationshipExcelConfigData.json').then(w => w.default);
-export const MonsterSpecialNameExcelConfigData = await import('ExcelBinOutput/MonsterSpecialNameExcelConfigData.json').then(w => w.default);
-export const MonsterTitleExcelConfigData = await import('ExcelBinOutput/MonsterTitleExcelConfigData.json').then(w => w.default);
-export const MpPlayAbilityGroupExcelConfigData = await import('ExcelBinOutput/MpPlayAbilityGroupExcelConfigData.json').then(w => w.default);
-export const MpPlayBuffExcelConfigData = await import('ExcelBinOutput/MpPlayBuffExcelConfigData.json').then(w => w.default);
-export const MpPlayGroupExcelConfigData = await import('ExcelBinOutput/MpPlayGroupExcelConfigData.json').then(w => w.default);
-export const MpPlayLevelTextDataExcelConfigData = await import('ExcelBinOutput/MpPlayLevelTextDataExcelConfigData.json').then(w => w.default);
-export const MpPlayMatchExcelConfigData = await import('ExcelBinOutput/MpPlayMatchExcelConfigData.json').then(w => w.default);
-export const MpPlayScoreExcelConfigData = await import('ExcelBinOutput/MpPlayScoreExcelConfigData.json').then(w => w.default);
-export const MpPlayStatisticConfigData = await import('ExcelBinOutput/MpPlayStatisticConfigData.json').then(w => w.default);
-export const MpPlayTextDataExcelConfigData = await import('ExcelBinOutput/MpPlayTextDataExcelConfigData.json').then(w => w.default);
-export const MpPlayWatcherConfigData = await import('ExcelBinOutput/MpPlayWatcherConfigData.json').then(w => w.default);
-export const MusicGameBasicConfigData = await import('ExcelBinOutput/MusicGameBasicConfigData.json').then(w => w.default);
-export const MusicInfoConfigData = await import('ExcelBinOutput/MusicInfoConfigData.json').then(w => w.default);
-export const NewActivityAvatarSelectionExcelConfigData = await import('ExcelBinOutput/NewActivityAvatarSelectionExcelConfigData.json').then(w => w.default);
-export const NewActivityCondExcelConfigData = await import('ExcelBinOutput/NewActivityCondExcelConfigData.json').then(w => w.default);
-export const NewActivityEntryConfigData = await import('ExcelBinOutput/NewActivityEntryConfigData.json').then(w => w.default);
-export const NewActivityExcelConfigData = await import('ExcelBinOutput/NewActivityExcelConfigData.json').then(w => w.default);
-export const NewActivitySaleExcelConfigData = await import('ExcelBinOutput/NewActivitySaleExcelConfigData.json').then(w => w.default);
-export const NewActivityScoreLimitExcelConfigData = await import('ExcelBinOutput/NewActivityScoreLimitExcelConfigData.json').then(w => w.default);
-export const NewActivityScoreRewardExcelConfigData = await import('ExcelBinOutput/NewActivityScoreRewardExcelConfigData.json').then(w => w.default);
-export const NewActivityScoreShowExcelConfigData = await import('ExcelBinOutput/NewActivityScoreShowExcelConfigData.json').then(w => w.default);
-export const NewActivityTimeGroupExcelConfigData = await import('ExcelBinOutput/NewActivityTimeGroupExcelConfigData.json').then(w => w.default);
-export const NewActivityWatcherConfigData = await import('ExcelBinOutput/NewActivityWatcherConfigData.json').then(w => w.default);
+export { default as MechanicBuildingExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MechanicBuildingExcelConfigData.json';
+export { default as MechanicusCardCurseExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MechanicusCardCurseExcelConfigData.json';
+export { default as MechanicusCardEffectExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MechanicusCardEffectExcelConfigData.json';
+export { default as MechanicusCardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MechanicusCardExcelConfigData.json';
+export { default as MechanicusDifficultyExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MechanicusDifficultyExcelConfigData.json';
+export { default as MechanicusExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MechanicusExcelConfigData.json';
+export { default as MechanicusGearLevelUpExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MechanicusGearLevelUpExcelConfigData.json';
+export { default as MechanicusMapExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MechanicusMapExcelConfigData.json';
+export { default as MechanicusMapPointExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MechanicusMapPointExcelConfigData.json';
+export { default as MechanicusSequenceExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MechanicusSequenceExcelConfigData.json';
+export { default as MechanicusWatcherExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MechanicusWatcherExcelConfigData.json';
+export { default as MiracleRingDropExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MiracleRingDropExcelConfigData.json';
+export { default as MiracleRingExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MiracleRingExcelConfigData.json';
+export { default as MonsterAffixExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MonsterAffixExcelConfigData.json';
+export { default as MonsterCurveExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MonsterCurveExcelConfigData.json';
+export { default as MonsterDescribeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MonsterDescribeExcelConfigData.json';
+export { default as MonsterExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MonsterExcelConfigData.json';
+export { default as MonsterMultiPlayerExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MonsterMultiPlayerExcelConfigData.json';
+export { default as MonsterRelationshipExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MonsterRelationshipExcelConfigData.json';
+export { default as MonsterSpecialNameExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MonsterSpecialNameExcelConfigData.json';
+export { default as MonsterTitleExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MonsterTitleExcelConfigData.json';
+export { default as MpPlayAbilityGroupExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MpPlayAbilityGroupExcelConfigData.json';
+export { default as MpPlayBuffExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MpPlayBuffExcelConfigData.json';
+export { default as MpPlayGroupExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MpPlayGroupExcelConfigData.json';
+export { default as MpPlayLevelTextDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MpPlayLevelTextDataExcelConfigData.json';
+export { default as MpPlayMatchExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MpPlayMatchExcelConfigData.json';
+export { default as MpPlayScoreExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MpPlayScoreExcelConfigData.json';
+export { default as MpPlayStatisticConfigData } from '../lib/GenshinData/ExcelBinOutput/MpPlayStatisticConfigData.json';
+export { default as MpPlayTextDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MpPlayTextDataExcelConfigData.json';
+export { default as MpPlayWatcherConfigData } from '../lib/GenshinData/ExcelBinOutput/MpPlayWatcherConfigData.json';
+export { default as MusicGameBasicConfigData } from '../lib/GenshinData/ExcelBinOutput/MusicGameBasicConfigData.json';
+export { default as MusicInfoConfigData } from '../lib/GenshinData/ExcelBinOutput/MusicInfoConfigData.json';
+export { default as NewActivityAvatarSelectionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/NewActivityAvatarSelectionExcelConfigData.json';
+export { default as NewActivityCondExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/NewActivityCondExcelConfigData.json';
+export { default as NewActivityEntryConfigData } from '../lib/GenshinData/ExcelBinOutput/NewActivityEntryConfigData.json';
+export { default as NewActivityExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/NewActivityExcelConfigData.json';
+export { default as NewActivitySaleExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/NewActivitySaleExcelConfigData.json';
+export { default as NewActivityScoreLimitExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/NewActivityScoreLimitExcelConfigData.json';
+export { default as NewActivityScoreRewardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/NewActivityScoreRewardExcelConfigData.json';
+export { default as NewActivityScoreShowExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/NewActivityScoreShowExcelConfigData.json';
+export { default as NewActivityTimeGroupExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/NewActivityTimeGroupExcelConfigData.json';
+export { default as NewActivityWatcherConfigData } from '../lib/GenshinData/ExcelBinOutput/NewActivityWatcherConfigData.json';
 
 // Npc
-export const NpcCrowdExcelConfigData = await import('ExcelBinOutput/NpcCrowdExcelConfigData.json').then(w => w.default);
-export const NpcExcelConfigData = await import('ExcelBinOutput/NpcExcelConfigData.json').then(w => w.default);
-export const NpcFirstMetExcelConfigData = await import('ExcelBinOutput/NpcFirstMetExcelConfigData.json').then(w => w.default);
+export { default as NpcCrowdExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/NpcCrowdExcelConfigData.json';
+export { default as NpcExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/NpcExcelConfigData.json';
+export { default as NpcFirstMetExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/NpcFirstMetExcelConfigData.json';
 
 //...
-export const OfferingLevelUpExcelConfigData = await import('ExcelBinOutput/OfferingLevelUpExcelConfigData.json').then(w => w.default);
-export const OfferingOpenStateConfigData = await import('ExcelBinOutput/OfferingOpenStateConfigData.json').then(w => w.default);
-export const OpActivityBonusExcelConfigData = await import('ExcelBinOutput/OpActivityBonusExcelConfigData.json').then(w => w.default);
-export const OpActivityExcelConfigData = await import('ExcelBinOutput/OpActivityExcelConfigData.json').then(w => w.default);
-export const OpenStateConfigData = await import('ExcelBinOutput/OpenStateConfigData.json').then(w => w.default);
-export const OptionExcelConfigData = await import('ExcelBinOutput/OptionExcelConfigData.json').then(w => w.default);
-export const OverflowTransformExcelConfigData = await import('ExcelBinOutput/OverflowTransformExcelConfigData.json').then(w => w.default);
-export const PersonalLineActivityExcelConfigData = await import('ExcelBinOutput/PersonalLineActivityExcelConfigData.json').then(w => w.default);
-export const PersonalLineExcelConfigData = await import('ExcelBinOutput/PersonalLineExcelConfigData.json').then(w => w.default);
-export const PhotographExpressionExcelConfigData = await import('ExcelBinOutput/PhotographExpressionExcelConfigData.json').then(w => w.default);
-export const PhotographPoseExcelConfigData = await import('ExcelBinOutput/PhotographPoseExcelConfigData.json').then(w => w.default);
-export const PhotographPosenameExcelConfigData = await import('ExcelBinOutput/PhotographPosenameExcelConfigData.json').then(w => w.default);
-export const PhotographTaskData = await import('ExcelBinOutput/PhotographTaskData.json').then(w => w.default);
+export { default as OfferingLevelUpExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/OfferingLevelUpExcelConfigData.json';
+export { default as OfferingOpenStateConfigData } from '../lib/GenshinData/ExcelBinOutput/OfferingOpenStateConfigData.json';
+export { default as OpActivityBonusExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/OpActivityBonusExcelConfigData.json';
+export { default as OpActivityExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/OpActivityExcelConfigData.json';
+export { default as OpenStateConfigData } from '../lib/GenshinData/ExcelBinOutput/OpenStateConfigData.json';
+export { default as OptionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/OptionExcelConfigData.json';
+export { default as OverflowTransformExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/OverflowTransformExcelConfigData.json';
+export { default as PersonalLineActivityExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/PersonalLineActivityExcelConfigData.json';
+export { default as PersonalLineExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/PersonalLineExcelConfigData.json';
+export { default as PhotographExpressionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/PhotographExpressionExcelConfigData.json';
+export { default as PhotographPoseExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/PhotographPoseExcelConfigData.json';
+export { default as PhotographPosenameExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/PhotographPosenameExcelConfigData.json';
+export { default as PhotographTaskData } from '../lib/GenshinData/ExcelBinOutput/PhotographTaskData.json';
 
 // Player Level
-export const PlayerLevelExcelConfigData = await import('ExcelBinOutput/PlayerLevelExcelConfigData.json').then(w => w.default);
-export const PlayerLevelLockExcelConfigData = await import('ExcelBinOutput/PlayerLevelLockExcelConfigData.json').then(w => w.default);
+export { default as PlayerLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/PlayerLevelExcelConfigData.json';
+export { default as PlayerLevelLockExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/PlayerLevelLockExcelConfigData.json';
 
 //...
-export const PriceTierConfigData = await import('ExcelBinOutput/PriceTierConfigData.json').then(w => w.default);
-export const ProductCardDetailConfigData = await import('ExcelBinOutput/ProductCardDetailConfigData.json').then(w => w.default);
-export const ProductGoogleGiftCardDetailConfigData = await import('ExcelBinOutput/ProductGoogleGiftCardDetailConfigData.json').then(w => w.default);
-export const ProductIdConfigData = await import('ExcelBinOutput/ProductIdConfigData.json').then(w => w.default);
-export const ProductMcoinDetailConfigData = await import('ExcelBinOutput/ProductMcoinDetailConfigData.json').then(w => w.default);
-export const ProductPlayDetailConfigData = await import('ExcelBinOutput/ProductPlayDetailConfigData.json').then(w => w.default);
-export const ProductPS4PackageDetailConfigData = await import('ExcelBinOutput/ProductPS4PackageDetailConfigData.json').then(w => w.default);
+export { default as PriceTierConfigData } from '../lib/GenshinData/ExcelBinOutput/PriceTierConfigData.json';
+export { default as ProductCardDetailConfigData } from '../lib/GenshinData/ExcelBinOutput/ProductCardDetailConfigData.json';
+export { default as ProductGoogleGiftCardDetailConfigData } from '../lib/GenshinData/ExcelBinOutput/ProductGoogleGiftCardDetailConfigData.json';
+export { default as ProductIdConfigData } from '../lib/GenshinData/ExcelBinOutput/ProductIdConfigData.json';
+export { default as ProductMcoinDetailConfigData } from '../lib/GenshinData/ExcelBinOutput/ProductMcoinDetailConfigData.json';
+export { default as ProductPlayDetailConfigData } from '../lib/GenshinData/ExcelBinOutput/ProductPlayDetailConfigData.json';
+export { default as ProductPS4PackageDetailConfigData } from '../lib/GenshinData/ExcelBinOutput/ProductPS4PackageDetailConfigData.json';
+
+*/
 
 // Skill Upgrade
-export const ProudSkillExcelConfigData = await import('ExcelBinOutput/ProudSkillExcelConfigData.json').then(w => w.default);
+export { default as ProudSkillExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ProudSkillExcelConfigData.json';
 
+/*
 //...
-export const PS4GroupExcelConfigData = await import('ExcelBinOutput/PS4GroupExcelConfigData.json').then(w => w.default);
-export const PS5GroupExcelConfigData = await import('ExcelBinOutput/PS5GroupExcelConfigData.json').then(w => w.default);
-export const PSActivitiesActivityConfigData = await import('ExcelBinOutput/PSActivitiesActivityConfigData.json').then(w => w.default);
-export const PSActivitiesSubTaskConfigData = await import('ExcelBinOutput/PSActivitiesSubTaskConfigData.json').then(w => w.default);
-export const PSActivitiesTaskConfigData = await import('ExcelBinOutput/PSActivitiesTaskConfigData.json').then(w => w.default);
-export const PushTipsCodexExcelConfigData = await import('ExcelBinOutput/PushTipsCodexExcelConfigData.json').then(w => w.default);
-export const PushTipsConfigData = await import('ExcelBinOutput/PushTipsConfigData.json').then(w => w.default);
+export { default as PS4GroupExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/PS4GroupExcelConfigData.json';
+export { default as PS5GroupExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/PS5GroupExcelConfigData.json';
+export { default as PSActivitiesActivityConfigData } from '../lib/GenshinData/ExcelBinOutput/PSActivitiesActivityConfigData.json';
+export { default as PSActivitiesSubTaskConfigData } from '../lib/GenshinData/ExcelBinOutput/PSActivitiesSubTaskConfigData.json';
+export { default as PSActivitiesTaskConfigData } from '../lib/GenshinData/ExcelBinOutput/PSActivitiesTaskConfigData.json';
+export { default as PushTipsCodexExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/PushTipsCodexExcelConfigData.json';
+export { default as PushTipsConfigData } from '../lib/GenshinData/ExcelBinOutput/PushTipsConfigData.json';
 
 // Quest
-export const QuestCodexExcelConfigData = await import('ExcelBinOutput/QuestCodexExcelConfigData.json').then(w => w.default);
-export const QuestExcelConfigData = await import('ExcelBinOutput/QuestExcelConfigData.json').then(w => w.default);
-export const QuestGlobalVarConfigData = await import('ExcelBinOutput/QuestGlobalVarConfigData.json').then(w => w.default);
-export const QuestPlaceConfigData = await import('ExcelBinOutput/QuestPlaceConfigData.json').then(w => w.default);
-export const QuestSummarizationTextExcelConfigData = await import('ExcelBinOutput/QuestSummarizationTextExcelConfigData.json').then(w => w.default);
+export { default as QuestCodexExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/QuestCodexExcelConfigData.json';
+export { default as QuestExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/QuestExcelConfigData.json';
+export { default as QuestGlobalVarConfigData } from '../lib/GenshinData/ExcelBinOutput/QuestGlobalVarConfigData.json';
+export { default as QuestPlaceConfigData } from '../lib/GenshinData/ExcelBinOutput/QuestPlaceConfigData.json';
+export { default as QuestSummarizationTextExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/QuestSummarizationTextExcelConfigData.json';
 
 //...
-export const RadarHintExcelConfigData = await import('ExcelBinOutput/RadarHintExcelConfigData.json').then(w => w.default);
-export const RandomMainQuestExcelConfigData = await import('ExcelBinOutput/RandomMainQuestExcelConfigData.json').then(w => w.default);
-export const RandomQuestElemPoolExcelConfigData = await import('ExcelBinOutput/RandomQuestElemPoolExcelConfigData.json').then(w => w.default);
-export const RandomQuestEntranceExcelConfigData = await import('ExcelBinOutput/RandomQuestEntranceExcelConfigData.json').then(w => w.default);
-export const RandomQuestExcelConfigData = await import('ExcelBinOutput/RandomQuestExcelConfigData.json').then(w => w.default);
-export const RandomQuestTemplateExcelConfigData = await import('ExcelBinOutput/RandomQuestTemplateExcelConfigData.json').then(w => w.default);
-export const RandTaskExcelConfigData = await import('ExcelBinOutput/RandTaskExcelConfigData.json').then(w => w.default);
-export const RandTaskLevelConfigData = await import('ExcelBinOutput/RandTaskLevelConfigData.json').then(w => w.default);
-export const RandTaskRewardConfigData = await import('ExcelBinOutput/RandTaskRewardConfigData.json').then(w => w.default);
-export const ReactionEnergyExcelConfigData = await import('ExcelBinOutput/ReactionEnergyExcelConfigData.json').then(w => w.default);
-export const RefreshIndexExcelConfigData = await import('ExcelBinOutput/RefreshIndexExcelConfigData.json').then(w => w.default);
-export const RefreshPolicyExcelConfigData = await import('ExcelBinOutput/RefreshPolicyExcelConfigData.json').then(w => w.default);
-export const RegionSearchCondExcelConfigData = await import('ExcelBinOutput/RegionSearchCondExcelConfigData.json').then(w => w.default);
-export const RegionSearchExcelConfigData = await import('ExcelBinOutput/RegionSearchExcelConfigData.json').then(w => w.default);
-export const RegionSearchRegionExcelConfigData = await import('ExcelBinOutput/RegionSearchRegionExcelConfigData.json').then(w => w.default);
+export { default as RadarHintExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RadarHintExcelConfigData.json';
+export { default as RandomMainQuestExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RandomMainQuestExcelConfigData.json';
+export { default as RandomQuestElemPoolExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RandomQuestElemPoolExcelConfigData.json';
+export { default as RandomQuestEntranceExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RandomQuestEntranceExcelConfigData.json';
+export { default as RandomQuestExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RandomQuestExcelConfigData.json';
+export { default as RandomQuestTemplateExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RandomQuestTemplateExcelConfigData.json';
+export { default as RandTaskExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RandTaskExcelConfigData.json';
+export { default as RandTaskLevelConfigData } from '../lib/GenshinData/ExcelBinOutput/RandTaskLevelConfigData.json';
+export { default as RandTaskRewardConfigData } from '../lib/GenshinData/ExcelBinOutput/RandTaskRewardConfigData.json';
+export { default as ReactionEnergyExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReactionEnergyExcelConfigData.json';
+export { default as RefreshIndexExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RefreshIndexExcelConfigData.json';
+export { default as RefreshPolicyExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RefreshPolicyExcelConfigData.json';
+export { default as RegionSearchCondExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RegionSearchCondExcelConfigData.json';
+export { default as RegionSearchExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RegionSearchExcelConfigData.json';
+export { default as RegionSearchRegionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RegionSearchRegionExcelConfigData.json';
 
 // Artifacts
-export const ReliquaryAffixExcelConfigData = await import('ExcelBinOutput/ReliquaryAffixExcelConfigData.json').then(w => w.default);
-export const ReliquaryCodexExcelConfigData = await import('ExcelBinOutput/ReliquaryCodexExcelConfigData.json').then(w => w.default);
-export const ReliquaryDecomposeExcelConfigData = await import('ExcelBinOutput/ReliquaryDecomposeExcelConfigData.json').then(w => w.default);
-export const ReliquaryExcelConfigData = await import('ExcelBinOutput/ReliquaryExcelConfigData.json').then(w => w.default);
-export const ReliquaryLevelExcelConfigData = await import('ExcelBinOutput/ReliquaryLevelExcelConfigData.json').then(w => w.default);
-export const ReliquaryMainPropExcelConfigData = await import('ExcelBinOutput/ReliquaryMainPropExcelConfigData.json').then(w => w.default);
-export const ReliquaryPowerupExcelConfigData = await import('ExcelBinOutput/ReliquaryPowerupExcelConfigData.json').then(w => w.default);
-export const ReliquarySetExcelConfigData = await import('ExcelBinOutput/ReliquarySetExcelConfigData.json').then(w => w.default);
+export { default as ReliquaryAffixExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReliquaryAffixExcelConfigData.json';
+export { default as ReliquaryCodexExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReliquaryCodexExcelConfigData.json';
+export { default as ReliquaryDecomposeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReliquaryDecomposeExcelConfigData.json';
+export { default as ReliquaryExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReliquaryExcelConfigData.json';
+export { default as ReliquaryLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReliquaryLevelExcelConfigData.json';
+export { default as ReliquaryMainPropExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReliquaryMainPropExcelConfigData.json';
+export { default as ReliquaryPowerupExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReliquaryPowerupExcelConfigData.json';
+export { default as ReliquarySetExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReliquarySetExcelConfigData.json';
 
 //...
-export const ReminderExcelConfigData = await import('ExcelBinOutput/ReminderExcelConfigData.json').then(w => w.default);
-export const ReminderIndexExcelConfigData = await import('ExcelBinOutput/ReminderIndexExcelConfigData.json').then(w => w.default);
-export const ReputationCityExcelConfigData = await import('ExcelBinOutput/ReputationCityExcelConfigData.json').then(w => w.default);
+export { default as ReminderExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReminderExcelConfigData.json';
+export { default as ReminderIndexExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReminderIndexExcelConfigData.json';
+export { default as ReputationCityExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReputationCityExcelConfigData.json';
 
 // Reputation
-export const ReputationEntranceExcelConfigData = await import('ExcelBinOutput/ReputationEntranceExcelConfigData.json').then(w => w.default);
-export const ReputationExploreExcelConfigData = await import('ExcelBinOutput/ReputationExploreExcelConfigData.json').then(w => w.default);
-export const ReputationFunctionExcelConfigData = await import('ExcelBinOutput/ReputationFunctionExcelConfigData.json').then(w => w.default);
-export const ReputationLevelExcelConfigData = await import('ExcelBinOutput/ReputationLevelExcelConfigData.json').then(w => w.default);
-export const ReputationQuestExcelConfigData = await import('ExcelBinOutput/ReputationQuestExcelConfigData.json').then(w => w.default);
-export const ReputationRequestExcelConfigData = await import('ExcelBinOutput/ReputationRequestExcelConfigData.json').then(w => w.default);
+export { default as ReputationEntranceExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReputationEntranceExcelConfigData.json';
+export { default as ReputationExploreExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReputationExploreExcelConfigData.json';
+export { default as ReputationFunctionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReputationFunctionExcelConfigData.json';
+export { default as ReputationLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReputationLevelExcelConfigData.json';
+export { default as ReputationQuestExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReputationQuestExcelConfigData.json';
+export { default as ReputationRequestExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReputationRequestExcelConfigData.json';
 
 //...
-export const ReunionMissionExcelConfigData = await import('ExcelBinOutput/ReunionMissionExcelConfigData.json').then(w => w.default);
-export const ReunionPrivilegeExcelConfigData = await import('ExcelBinOutput/ReunionPrivilegeExcelConfigData.json').then(w => w.default);
-export const ReunionScheduleExcelConfigData = await import('ExcelBinOutput/ReunionScheduleExcelConfigData.json').then(w => w.default);
-export const ReunionSignInExcelConfigData = await import('ExcelBinOutput/ReunionSignInExcelConfigData.json').then(w => w.default);
-export const ReunionWatcherExcelConfigData = await import('ExcelBinOutput/ReunionWatcherExcelConfigData.json').then(w => w.default);
-export const ReviseLevelGrowExcelConfigData = await import('ExcelBinOutput/ReviseLevelGrowExcelConfigData.json').then(w => w.default);
+export { default as ReunionMissionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReunionMissionExcelConfigData.json';
+export { default as ReunionPrivilegeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReunionPrivilegeExcelConfigData.json';
+export { default as ReunionScheduleExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReunionScheduleExcelConfigData.json';
+export { default as ReunionSignInExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReunionSignInExcelConfigData.json';
+export { default as ReunionWatcherExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReunionWatcherExcelConfigData.json';
+export { default as ReviseLevelGrowExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ReviseLevelGrowExcelConfigData.json';
 
 // Reward
-export const RewardExcelConfigData = await import('ExcelBinOutput/RewardExcelConfigData.json').then(w => w.default);
-export const RewardPreviewExcelConfigData = await import('ExcelBinOutput/RewardPreviewExcelConfigData.json').then(w => w.default);
+export { default as RewardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RewardExcelConfigData.json';
+export { default as RewardPreviewExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RewardPreviewExcelConfigData.json';
 
 //...
-export const RoomExcelConfigData = await import('ExcelBinOutput/RoomExcelConfigData.json').then(w => w.default);
-export const RoomWeatherExcelConfigData = await import('ExcelBinOutput/RoomWeatherExcelConfigData.json').then(w => w.default);
-export const RoutineDetailExcelConfigData = await import('ExcelBinOutput/RoutineDetailExcelConfigData.json').then(w => w.default);
-export const RoutineTypeExcelConfigData = await import('ExcelBinOutput/RoutineTypeExcelConfigData.json').then(w => w.default);
-export const RqTalkExcelConfigData = await import('ExcelBinOutput/RqTalkExcelConfigData.json').then(w => w.default);
-export const SceneExcelConfigData = await import('ExcelBinOutput/SceneExcelConfigData.json').then(w => w.default);
-export const SceneTagConfigData = await import('ExcelBinOutput/SceneTagConfigData.json').then(w => w.default);
-export const SeaLampSectionExcelConfigData = await import('ExcelBinOutput/SeaLampSectionExcelConfigData.json').then(w => w.default);
-export const SeaLampSectionMainQuestExcelConfigData = await import('ExcelBinOutput/SeaLampSectionMainQuestExcelConfigData.json').then(w => w.default);
-export const SeaLampSectionMiniQuestExcelConfigData = await import('ExcelBinOutput/SeaLampSectionMiniQuestExcelConfigData.json').then(w => w.default);
-export const SensitiveWordConfigData = await import('ExcelBinOutput/SensitiveWordConfigData.json').then(w => w.default);
+export { default as RoomExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RoomExcelConfigData.json';
+export { default as RoomWeatherExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RoomWeatherExcelConfigData.json';
+export { default as RoutineDetailExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RoutineDetailExcelConfigData.json';
+export { default as RoutineTypeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RoutineTypeExcelConfigData.json';
+export { default as RqTalkExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/RqTalkExcelConfigData.json';
+export { default as SceneExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/SceneExcelConfigData.json';
+export { default as SceneTagConfigData } from '../lib/GenshinData/ExcelBinOutput/SceneTagConfigData.json';
+export { default as SeaLampSectionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/SeaLampSectionExcelConfigData.json';
+export { default as SeaLampSectionMainQuestExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/SeaLampSectionMainQuestExcelConfigData.json';
+export { default as SeaLampSectionMiniQuestExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/SeaLampSectionMiniQuestExcelConfigData.json';
+export { default as SensitiveWordConfigData } from '../lib/GenshinData/ExcelBinOutput/SensitiveWordConfigData.json';
 
 // Shpos
-export const ShopExcelConfigData = await import('ExcelBinOutput/ShopExcelConfigData.json').then(w => w.default);
-export const ShopGoodsExcelConfigData = await import('ExcelBinOutput/ShopGoodsExcelConfigData.json').then(w => w.default);
-export const ShopmallEntranceExcelConfigData = await import('ExcelBinOutput/ShopmallEntranceExcelConfigData.json').then(w => w.default);
-export const ShopmallGoodsSaleConfigData = await import('ExcelBinOutput/ShopmallGoodsSaleConfigData.json').then(w => w.default);
-export const ShopmallRecommendConfigData = await import('ExcelBinOutput/ShopmallRecommendConfigData.json').then(w => w.default);
-export const ShopmallSubTabExcelConfigData = await import('ExcelBinOutput/ShopmallSubTabExcelConfigData.json').then(w => w.default);
-export const ShopMaterialOrderExcelConfigData = await import('ExcelBinOutput/ShopMaterialOrderExcelConfigData.json').then(w => w.default);
-export const ShopRotateExcelConfigData = await import('ExcelBinOutput/ShopRotateExcelConfigData.json').then(w => w.default);
+export { default as ShopExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ShopExcelConfigData.json';
+export { default as ShopGoodsExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ShopGoodsExcelConfigData.json';
+export { default as ShopmallEntranceExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ShopmallEntranceExcelConfigData.json';
+export { default as ShopmallGoodsSaleConfigData } from '../lib/GenshinData/ExcelBinOutput/ShopmallGoodsSaleConfigData.json';
+export { default as ShopmallRecommendConfigData } from '../lib/GenshinData/ExcelBinOutput/ShopmallRecommendConfigData.json';
+export { default as ShopmallSubTabExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ShopmallSubTabExcelConfigData.json';
+export { default as ShopMaterialOrderExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ShopMaterialOrderExcelConfigData.json';
+export { default as ShopRotateExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ShopRotateExcelConfigData.json';
 
 //...
-export const SignInCondExcelConfigData = await import('ExcelBinOutput/SignInCondExcelConfigData.json').then(w => w.default);
-export const SignInDayExcelConfigData = await import('ExcelBinOutput/SignInDayExcelConfigData.json').then(w => w.default);
-export const SignInPeriodExcelConfigData = await import('ExcelBinOutput/SignInPeriodExcelConfigData.json').then(w => w.default);
-export const StateExcelConfigData = await import('ExcelBinOutput/StateExcelConfigData.json').then(w => w.default);
-export const StrengthenBasePointExcelConfigData = await import('ExcelBinOutput/StrengthenBasePointExcelConfigData.json').then(w => w.default);
-export const SystemOpenUIConfigData = await import('ExcelBinOutput/SystemOpenUIConfigData.json').then(w => w.default);
-export const TalkExcelConfigData = await import('ExcelBinOutput/TalkExcelConfigData.json').then(w => w.default);
-export const TalkSelectTimeOutExcelConfigData = await import('ExcelBinOutput/TalkSelectTimeOutExcelConfigData.json').then(w => w.default);
-export const TauntLevelTemplateExcelConfigData = await import('ExcelBinOutput/TauntLevelTemplateExcelConfigData.json').then(w => w.default);
-export const TeamResonanceExcelConfigData = await import('ExcelBinOutput/TeamResonanceExcelConfigData.json').then(w => w.default);
-export const TemplateReminderExcelConfigData = await import('ExcelBinOutput/TemplateReminderExcelConfigData.json').then(w => w.default);
-export const TowerBuffExcelConfigData = await import('ExcelBinOutput/TowerBuffExcelConfigData.json').then(w => w.default);
-export const TowerFloorExcelConfigData = await import('ExcelBinOutput/TowerFloorExcelConfigData.json').then(w => w.default);
-export const TowerLevelExcelConfigData = await import('ExcelBinOutput/TowerLevelExcelConfigData.json').then(w => w.default);
-export const TowerScheduleExcelConfigData = await import('ExcelBinOutput/TowerScheduleExcelConfigData.json').then(w => w.default);
-export const TowerSkipFloorExcelConfigData = await import('ExcelBinOutput/TowerSkipFloorExcelConfigData.json').then(w => w.default);
-export const TransPointRewardConfigData = await import('ExcelBinOutput/TransPointRewardConfigData.json').then(w => w.default);
+export { default as SignInCondExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/SignInCondExcelConfigData.json';
+export { default as SignInDayExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/SignInDayExcelConfigData.json';
+export { default as SignInPeriodExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/SignInPeriodExcelConfigData.json';
+export { default as StateExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/StateExcelConfigData.json';
+export { default as StrengthenBasePointExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/StrengthenBasePointExcelConfigData.json';
+export { default as SystemOpenUIConfigData } from '../lib/GenshinData/ExcelBinOutput/SystemOpenUIConfigData.json';
+export { default as TalkExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TalkExcelConfigData.json';
+export { default as TalkSelectTimeOutExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TalkSelectTimeOutExcelConfigData.json';
+export { default as TauntLevelTemplateExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TauntLevelTemplateExcelConfigData.json';
+export { default as TeamResonanceExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TeamResonanceExcelConfigData.json';
+export { default as TemplateReminderExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TemplateReminderExcelConfigData.json';
+export { default as TowerBuffExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TowerBuffExcelConfigData.json';
+export { default as TowerFloorExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TowerFloorExcelConfigData.json';
+export { default as TowerLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TowerLevelExcelConfigData.json';
+export { default as TowerScheduleExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TowerScheduleExcelConfigData.json';
+export { default as TowerSkipFloorExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TowerSkipFloorExcelConfigData.json';
+export { default as TransPointRewardConfigData } from '../lib/GenshinData/ExcelBinOutput/TransPointRewardConfigData.json';
 
 // Treasure Map
-export const TreasureMapBonusRegionExcelConfigData = await import('ExcelBinOutput/TreasureMapBonusRegionExcelConfigData.json').then(w => w.default);
-export const TreasureMapExcelConfigData = await import('ExcelBinOutput/TreasureMapExcelConfigData.json').then(w => w.default);
-export const TreasureMapRegionExcelConfigData = await import('ExcelBinOutput/TreasureMapRegionExcelConfigData.json').then(w => w.default);
+export { default as TreasureMapBonusRegionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TreasureMapBonusRegionExcelConfigData.json';
+export { default as TreasureMapExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TreasureMapExcelConfigData.json';
+export { default as TreasureMapRegionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TreasureMapRegionExcelConfigData.json';
 
 //...
-export const TreeDropExcelConfigData = await import('ExcelBinOutput/TreeDropExcelConfigData.json').then(w => w.default);
-export const TreeTypeExcelConfigData = await import('ExcelBinOutput/TreeTypeExcelConfigData.json').then(w => w.default);
+export { default as TreeDropExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TreeDropExcelConfigData.json';
+export { default as TreeTypeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TreeTypeExcelConfigData.json';
 
 // Character Trial
-export const TrialAvatarActivityDataExcelConfigData = await import('ExcelBinOutput/TrialAvatarActivityDataExcelConfigData.json').then(w => w.default);
-export const TrialAvatarActivityExcelConfigData = await import('ExcelBinOutput/TrialAvatarActivityExcelConfigData.json').then(w => w.default);
-export const TrialAvatarExcelConfigData = await import('ExcelBinOutput/TrialAvatarExcelConfigData.json').then(w => w.default);
-export const TrialAvatarTemplateExcelConfigData = await import('ExcelBinOutput/TrialAvatarTemplateExcelConfigData.json').then(w => w.default);
-export const TrialReliquaryExcelConfigData = await import('ExcelBinOutput/TrialReliquaryExcelConfigData.json').then(w => w.default);
+export { default as TrialAvatarActivityDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TrialAvatarActivityDataExcelConfigData.json';
+export { default as TrialAvatarActivityExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TrialAvatarActivityExcelConfigData.json';
+export { default as TrialAvatarExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TrialAvatarExcelConfigData.json';
+export { default as TrialAvatarTemplateExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TrialAvatarTemplateExcelConfigData.json';
+export { default as TrialReliquaryExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TrialReliquaryExcelConfigData.json';
 
 //...
-export const TriggerExcelConfigData = await import('ExcelBinOutput/TriggerExcelConfigData.json').then(w => w.default);
-export const TutorialDetailExcelConfigData = await import('ExcelBinOutput/TutorialDetailExcelConfigData.json').then(w => w.default);
-export const TutorialExcelConfigData = await import('ExcelBinOutput/TutorialExcelConfigData.json').then(w => w.default);
-export const UidOpNotifyExcelConfigData = await import('ExcelBinOutput/UidOpNotifyExcelConfigData.json').then(w => w.default);
-export const VehicleSkillDepotExcelConfigData = await import('ExcelBinOutput/VehicleSkillDepotExcelConfigData.json').then(w => w.default);
-export const VehicleSkillExcelConfigData = await import('ExcelBinOutput/VehicleSkillExcelConfigData.json').then(w => w.default);
-export const ViewCodexExcelConfigData = await import('ExcelBinOutput/ViewCodexExcelConfigData.json').then(w => w.default);
+export { default as TriggerExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TriggerExcelConfigData.json';
+export { default as TutorialDetailExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TutorialDetailExcelConfigData.json';
+export { default as TutorialExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/TutorialExcelConfigData.json';
+export { default as UidOpNotifyExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/UidOpNotifyExcelConfigData.json';
+export { default as VehicleSkillDepotExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/VehicleSkillDepotExcelConfigData.json';
+export { default as VehicleSkillExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/VehicleSkillExcelConfigData.json';
+export { default as ViewCodexExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ViewCodexExcelConfigData.json';
+
+*/
 
 // Weapon
-export const WeaponCodexExcelConfigData = await import('ExcelBinOutput/WeaponCodexExcelConfigData.json').then(w => w.default);
-export const WeaponCurveExcelConfigData = await import('ExcelBinOutput/WeaponCurveExcelConfigData.json').then(w => w.default);
-export const WeaponExcelConfigData = await import('ExcelBinOutput/WeaponExcelConfigData.json').then(w => w.default);
-export const WeaponLevelExcelConfigData = await import('ExcelBinOutput/WeaponLevelExcelConfigData.json').then(w => w.default);
-export const WeaponPromoteExcelConfigData = await import('ExcelBinOutput/WeaponPromoteExcelConfigData.json').then(w => w.default);
+export { default as WeaponCodexExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/WeaponCodexExcelConfigData.json';
+export { default as WeaponCurveExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/WeaponCurveExcelConfigData.json';
+export { default as WeaponExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/WeaponExcelConfigData.json';
+export { default as WeaponLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/WeaponLevelExcelConfigData.json';
+export { default as WeaponPromoteExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/WeaponPromoteExcelConfigData.json';
 
+/*
 // Weather
-export const WeatherExcelConfigData = await import('ExcelBinOutput/WeatherExcelConfigData.json').then(w => w.default);
-export const WeatherTemplateExcelConfigData = await import('ExcelBinOutput/WeatherTemplateExcelConfigData.json').then(w => w.default);
+export { default as WeatherExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/WeatherExcelConfigData.json';
+export { default as WeatherTemplateExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/WeatherTemplateExcelConfigData.json';
 
 //...
-export const WidgetExcelConfigData = await import('ExcelBinOutput/WidgetExcelConfigData.json').then(w => w.default);
-export const WidgetGeneralExcelConfigData = await import('ExcelBinOutput/WidgetGeneralExcelConfigData.json').then(w => w.default);
-export const WorldAreaConfigData = await import('ExcelBinOutput/WorldAreaConfigData.json').then(w => w.default);
-export const WorldAreaExploreEventConfigData = await import('ExcelBinOutput/WorldAreaExploreEventConfigData.json').then(w => w.default);
-export const WorldAreaLevelupConfigData = await import('ExcelBinOutput/WorldAreaLevelupConfigData.json').then(w => w.default);
-export const WorldExcelConfigData = await import('ExcelBinOutput/WorldExcelConfigData.json').then(w => w.default);
-export const WorldLevelExcelConfigData = await import('ExcelBinOutput/WorldLevelExcelConfigData.json').then(w => w.default);
+export { default as WidgetExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/WidgetExcelConfigData.json';
+export { default as WidgetGeneralExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/WidgetGeneralExcelConfigData.json';
+export { default as WorldAreaConfigData } from '../lib/GenshinData/ExcelBinOutput/WorldAreaConfigData.json';
+export { default as WorldAreaExploreEventConfigData } from '../lib/GenshinData/ExcelBinOutput/WorldAreaExploreEventConfigData.json';
+export { default as WorldAreaLevelupConfigData } from '../lib/GenshinData/ExcelBinOutput/WorldAreaLevelupConfigData.json';
+export { default as WorldExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/WorldExcelConfigData.json';
+export { default as WorldLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/WorldLevelExcelConfigData.json';
+*/

@@ -1,6 +1,6 @@
-import { WeaponCodexExcelConfigData, WeaponExcelConfigData, WeaponPromoteExcelConfigData } from '../loader';
-import { Localizable, Unit, Prop } from './Common';
-import Promote from './Promote'
+import { WeaponCodexExcelConfigData, WeaponExcelConfigData, WeaponPromoteExcelConfigData } from '../loader.js';
+import { Localizable, Unit, Prop } from './Common.js';
+import Promote from './Promote.js'
 
 // Key List of WeaponExcelConfigData
 /* 
