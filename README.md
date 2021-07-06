@@ -1,5 +1,5 @@
 # GenshinData Parser
-  A simple parser for [Dimbreath/GenshinData](https://github.com/Dimbreath/GenshinData) for Korean users.  
+  A simple parser for [Dimbreath/GenshinData](https://github.com/Dimbreath/GenshinData) for Korean users. (Maybe supports other languages. just change ```config.json```)  
   This is the first time I implement Typescript, so the code could be very messy.
 
 ## Caution
@@ -13,7 +13,7 @@
 ## How to
  + clone the repo with submodules. use ```--recursive``` flag or use ```submodule update --init``` after cloning.
   ```
-  git clone --recursive URL_HERE
+  git clone --recursive https://github.com/Ariette/genshin-data-parse.git
   ```
  + ```npm run build```  
    - It will automatically run prebuild step.
