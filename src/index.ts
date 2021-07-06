@@ -60,6 +60,7 @@ for (const id in Character) {
     if (!Character[id].available) continue;
     builder.characters[id] = Character[id];
     const material: Set<number> = new Set();
+    const days: Set<string> = new Set();
     if (Character[id].skills?.talent?.normal?.upgrade?.[1]?.costs?.[0]?.id) {
         for (const type in Character[id].skills.talent) {
             Character[id].skills.talent[type].upgrade.forEach(w => {
@@ -67,6 +68,11 @@ for (const id in Character) {
                     // 지식의 왕관, 모라 제외
                     if (d.id != 104319 && d.id != 202) {
                         material.add(d.id)
+                        if (Material[d.id].day) {
+                            Material[d.id].day.forEach(day => {
+                                days.add(day)
+                            })
+                        }
                         if (!Material[d.id].character) Material[d.id].character = [];
                         if (!Material[d.id].character.includes(id)) Material[d.id].character.push(id);
                     }
@@ -80,6 +86,11 @@ for (const id in Character) {
                 // 지식의 왕관, 모라 제외
                 if (d.id != 104319 && d.id != 202) {
                     material.add(d.id)
+                    if (Material[d.id].day) {
+                        Material[d.id].day.forEach(day => {
+                            days.add(day)
+                        })
+                    }
                     if (!Material[d.id].character) Material[d.id].character = [];
                     if (!Material[d.id].character.includes(id)) Material[d.id].character.push(id);
                 }
@@ -87,20 +98,28 @@ for (const id in Character) {
         })
     }
     builder.characters[id].material = [...material];
+    builder.characters[id].day = [...days];
 }
 for (const id in Weapon) {
     if (!Weapon[id].available) continue;
     builder.weapons[id] = Weapon[id];
     const material: Set<number> = new Set();
+    const days: Set<string> = new Set();
     for (const promote of Weapon[id].promote) {
         for (const cost of promote.costs) {
             if (cost.id == 202) continue;
             material.add(cost.id);
+            if (Material[cost.id].day) {
+                Material[cost.id].day.forEach(day => {
+                    days.add(day)
+                })
+            }
             if (!Material[cost.id].weapon) Material[cost.id].weapon = [];
             if (!Material[cost.id].weapon.includes(id)) Material[cost.id].weapon.push(id);
         }
     }
     builder.weapons[id].material = [...material];
+    builder.weapons[id].day = [...days];
 }
 
 // Save Data
