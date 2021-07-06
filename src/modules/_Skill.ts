@@ -1,5 +1,5 @@
-import { Localizable, Unit } from './Common.js'
-import Promotes from './Promote.js';
+import { Localizable, Unit } from './_Common.js'
+import Promotes from './_Promote.js';
 import { AvatarSkillDepotExcelConfigData, AvatarSkillExcelConfigData, AvatarTalentExcelConfigData, ProudSkillExcelConfigData } from '../loader.js';
 
 // Key List of AvatarSkillDepotExcelConfigData
@@ -115,9 +115,7 @@ function Skills(): {[id: string]: Skill} {
         if (data.BreakLevel) target.ascension = data.BreakLevel;
         const costItems: any = data.CostItems;
         if (costItems?.some(w => w.Id)) {
-            const fakeData: any = Object.assign({}, data);
-            fakeData.PromoteLevel = data.BreakLevel;
-            const fakePromotes = Promotes([fakeData], 'ProudSkillId');
+            const fakePromotes = Promotes([data], 'ProudSkillId');
             Object.assign(target, fakePromotes[data.ProudSkillId][0]);
             delete target.props;
             delete target.ascension;

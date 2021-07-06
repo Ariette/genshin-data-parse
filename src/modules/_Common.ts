@@ -1,4 +1,4 @@
-import { TextMap } from '../loader.js'
+import { TextMap, ManualTextMapConfigData } from '../loader.js'
 
 export class Localizable {
     id: number;
@@ -30,7 +30,13 @@ export interface Unit {
 }
 
 export interface Prop {
-    type: string;
+    type: Localizable;
     value?: number;
     curve?: string
 }
+
+const flagMap: {[id: string]: number} = {};
+for (const data of ManualTextMapConfigData) {
+    flagMap[data.TextMapId] = data.TextMapContentTextMapHash;
+}
+export const FlagMap = flagMap;

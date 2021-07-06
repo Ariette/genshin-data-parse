@@ -1,5 +1,5 @@
 import { MaterialExcelConfigData, MaterialSourceDataExcelConfigData, MaterialCodexExcelConfigData } from '../loader.js';
-import { Localizable } from './Common.js';
+import { Localizable, Unit } from './_Common.js';
 
 // Key List of MaterialExcelConfigData
 /*
@@ -43,56 +43,53 @@ import { Localizable } from './Common.js';
 */
 
 interface Material {
-    interactionTitle: Localizable;
-    effect: Localizable;
-    special: Localizable;
     id: number;
     name: Localizable;
     desc: Localizable;
+    effect: Localizable;
     icon: string;
-    type: {name: Localizable, flag: string};
+    type: Localizable;
     rarity: number;
     stackLimit?: number;
-    day?: string[];
-    character? : number[];
-    weapon?: number[];
-    food?: {foodQuality: string, foodCategory?: string, satisfaction: unknown};
     source?: Localizable[];
     domain?: number[];
     available?: boolean;
+    food?: {
+        type: Localizable;
+        ingredients: Unit[];
+        character?: number;
+    };
+    day?: string[];
+    character? : (number|string)[];
+    weapon?: (number|string)[];
+    recipe?: (number|string)[];
 }
 
 const Material: {[id: number]: Material} = {};
 for (const data of MaterialExcelConfigData) {
     const target = {};
     target[data.Id] = {
-        interactionTitle: new Localizable(data.InteractionTitleTextMapHash),
-        effect: new Localizable(data.EffectDescTextMapHash),
-        special: new Localizable(data.SpecialDescTextMapHash),
         id: data.Id,
         name: new Localizable(data.NameTextMapHash),
         desc: new Localizable(data.DescTextMapHash),
+        effect: new Localizable(data.EffectDescTextMapHash),
         icon: data.Icon,
-        type: {name: new Localizable(data.TypeDescTextMapHash), flag: data.ItemType},
+        type: new Localizable(data.TypeDescTextMapHash),
         rarity: data.RankLevel
     }
     if (data.StackLimit) target[data.Id].stackLimit = data.StackLimit;
-    if (data.FoodQuality?.length > 0)
-        target[data.Id].food = {
-            foodQuality: data.FoodQuality,
-            satisfaction: data.SatiationParams
-        }
     Object.assign(Material, target);
 }
 
 // Add source data
 for (const data of MaterialSourceDataExcelConfigData) {
-    const target = {};
-    target[data.Id] = {
+    const target: any = {
         source: data.TextList.map(id => new Localizable(id)).filter(w => w.text)
     };
-    if (data.DungeonList) target[data.Id].domain = data.DungeonList.filter(id => id != 0);
-    Object.assign(Material[data.Id], target[data.Id]);
+    if (data.DungeonList) {
+        target.domain = data.DungeonList.filter(id => id != 0);
+    }
+    Object.assign(Material[data.Id], target);
 }
 
 // Checking availability by using codex.

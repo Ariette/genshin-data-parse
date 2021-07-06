@@ -27,6 +27,7 @@ function loadTextMap(): {[lang: string]: TextMap} {
 
 // TextMap
 export const TextMap = loadTextMap();
+export { default as ManualTextMapConfigData } from '../lib/GenshinData/ExcelBinOutput/ManualTextMapConfigData.json';
 
 /*
 
@@ -193,7 +194,6 @@ export { default as CoopInteractionExcelConfigData } from '../lib/GenshinData/Ex
 export { default as CoopPointExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CoopPointExcelConfigData.json';
 export { default as CoopRewardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CoopRewardExcelConfigData.json';
 export { default as CutsceneExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/CutsceneExcelConfigData.json';
-export { default as DailyDungeonConfigData } from '../lib/GenshinData/ExcelBinOutput/DailyDungeonConfigData.json';
 export { default as DailyTaskExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DailyTaskExcelConfigData.json';
 export { default as DailyTaskLevelExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DailyTaskLevelExcelConfigData.json';
 export { default as DailyTaskRewardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DailyTaskRewardExcelConfigData.json';
@@ -208,15 +208,23 @@ export { default as DragonSpineEnhanceExcelConfigData } from '../lib/GenshinData
 export { default as DragonSpineMissionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DragonSpineMissionExcelConfigData.json';
 export { default as DragonSpinePreviewExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DragonSpinePreviewExcelConfigData.json';
 export { default as DragonSpineStageExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DragonSpineStageExcelConfigData.json';
+*/
+
+// Dungeons = Abyss Domain
+export { default as DungeonExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonExcelConfigData.converted.json';
+export { default as DailyDungeonConfigData } from '../lib/GenshinData/ExcelBinOutput/DailyDungeonConfigData.json';
+/*
+export { default as DungeonEntryExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonEntryExcelConfigData.json';
 export { default as DungeonChallengeConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonChallengeConfigData.json';
 export { default as DungeonElementChallengeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonElementChallengeExcelConfigData.json';
-export { default as DungeonEntryExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonEntryExcelConfigData.json';
-export { default as DungeonExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonExcelConfigData.json';
 export { default as DungeonLevelEntityConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonLevelEntityConfigData.json';
 export { default as DungeonMapAreaExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonMapAreaExcelConfigData.json';
 export { default as DungeonPassExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonPassExcelConfigData.json';
 export { default as DungeonRosterConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonRosterConfigData.json';
 export { default as DungeonSerialConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonSerialConfigData.json';
+*/
+/*
+//...
 export { default as DynamicInteractionExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DynamicInteractionExcelConfigData.json';
 export { default as EchoShellExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EchoShellExcelConfigData.json';
 export { default as EchoShellFloatSignalExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EchoShellFloatSignalExcelConfigData.json';
@@ -234,7 +242,13 @@ export { default as EndureTemplateExcelConfigData } from '../lib/GenshinData/Exc
 export { default as EntityMultiPlayerExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EntityMultiPlayerExcelConfigData.json';
 export { default as EnvAnimalGatherExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EnvAnimalGatherExcelConfigData.json';
 export { default as EnvAnimalWeightExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EnvAnimalWeightExcelConfigData.json';
+*/
+
+// Weapon Skills
 export { default as EquipAffixExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EquipAffixExcelConfigData.json';
+
+
+/*
 export { default as ExhibitionCardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExhibitionCardExcelConfigData.json';
 export { default as ExhibitionScoreExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExhibitionScoreExcelConfigData.json';
 export { default as ExpeditionActivityMarkerExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExpeditionActivityMarkerExcelConfigData.json';
@@ -343,7 +357,6 @@ export { default as LockTemplateExcelConfigData } from '../lib/GenshinData/Excel
 export { default as MailExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MailExcelConfigData.json';
 export { default as MainCoopExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MainCoopExcelConfigData.json';
 export { default as MainQuestExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MainQuestExcelConfigData.json';
-export { default as ManualTextMapConfigData } from '../lib/GenshinData/ExcelBinOutput/ManualTextMapConfigData.json';
 export { default as MapTagDataConfigData } from '../lib/GenshinData/ExcelBinOutput/MapTagDataConfigData.json';
 export { default as MatchExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MatchExcelConfigData.json';
 export { default as MatchingTextDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MatchingTextDataExcelConfigData.json';

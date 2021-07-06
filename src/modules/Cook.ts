@@ -1,5 +1,5 @@
 import { CookBonusExcelConfigData, CookRecipeExcelConfigData } from '../loader.js';
-import { Localizable, Unit } from './Common.js';
+import { Localizable, Unit, FlagMap } from './_Common.js';
 
 // CookRecipeExcelConfigData
 /*
@@ -32,7 +32,7 @@ import { Localizable, Unit } from './Common.js';
 
 interface Cook {
     id: number;
-    type: string;
+    type: Localizable;
     desc: Localizable;
     effect: Localizable[];
     icon: string;
@@ -48,24 +48,24 @@ for (const data of CookRecipeExcelConfigData) {
     const target = {};
     target[data.Id] = {
         id: data.Id,
-        type: data.FoodType,
+        name: new Localizable(data.NameTextMapHash),
         desc: new Localizable(data.DescTextMapHash),
         effect: data.EffectDesc.map(w => new Localizable(w)).filter(w => w.text),
+        rarity: data.RankLevel,
+        type: new Localizable(FlagMap[data.FoodType]),
         icon: data.Icon,
-        ingredients: data.InputVec.map(w => {
+        ingredients: data.InputVec.filter(w => w.Id).map(w => {
             return {
                 id: w.Id,
                 count: w.Count
             }
         }),
-        foods: data.QualityOutputVec.map(w => {
+        foods: data.QualityOutputVec.filter(w => w.Id).map(w => {
             return {
                 id: w.Id,
                 count: w.Count
             }
         }),
-        name: new Localizable(data.NameTextMapHash),
-        rarity: data.RankLevel
     }
     Object.assign(Cook, target);
 }

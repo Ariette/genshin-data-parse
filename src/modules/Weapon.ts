@@ -1,6 +1,6 @@
-import { WeaponCodexExcelConfigData, WeaponExcelConfigData, WeaponPromoteExcelConfigData } from '../loader.js';
-import { Localizable, Unit, Prop } from './Common.js';
-import Promote from './Promote.js'
+import { WeaponCodexExcelConfigData, WeaponExcelConfigData, WeaponPromoteExcelConfigData, EquipAffixExcelConfigData } from '../loader.js';
+import { Localizable, Unit, Prop, FlagMap } from './_Common.js';
+import buildPromote, { Promote } from './_Promote.js'
 
 // Key List of WeaponExcelConfigData
 /* 
@@ -48,49 +48,69 @@ interface Weapon {
     iconAwake: string;
     desc: Localizable;
     id: number;
-    type: string;
+    type: Localizable;
     name: Localizable;
     rarity: number;
     baseExp: number;
-    promote: unknown;
-    prop: Prop[];
+    promote: Promote[];
+    stat: Prop[];
     destroy: Unit;
     story?: number;
     refineItem?: number;
-    skill?: number;
+    skill?: WeaponSkill;
     available?: boolean;
 }
 
-const Promotes = Promote(WeaponPromoteExcelConfigData, 'WeaponPromoteId');
+interface WeaponSkill {
+    name: Localizable;
+    desc: {
+        r1: Localizable[];
+        r2: Localizable[];
+        r3: Localizable[];
+        r4: Localizable[];
+        r5: Localizable[];
+    }
+}
+
+const Promotes = buildPromote(WeaponPromoteExcelConfigData, 'WeaponPromoteId');
+const SkillAffix: {[id: number]: WeaponSkill} = {};
+for (const data of EquipAffixExcelConfigData) {
+    const level = data.AffixId - ( data.Id * 10 ) + 1;
+    if (!SkillAffix[data.Id]) SkillAffix[data.Id] = {
+        name: new Localizable(data.NameTextMapHash),
+        desc: {r1: null, r2: null, r3: null, r4: null, r5: null}
+    };
+    SkillAffix[data.Id].desc['r' + level] = new Localizable(data.DescTextMapHash);
+}
 
 const Weapon: {[id: number]: Weapon} = {}
 for (const data of WeaponExcelConfigData) {
     const target = {};
     target[data.Id] = {
+        id: data.Id,
+        name: new Localizable(data.NameTextMapHash),
+        desc: new Localizable(data.DescTextMapHash),
+        type: new Localizable(FlagMap[data.WeaponType]),
+        rarity: data.RankLevel,
         icon: data.Icon,
         iconAwake: data.AwakenIcon,
-        desc: new Localizable(data.DescTextMapHash),
-        id: data.Id,
-        type: data.WeaponType,
-        name: new Localizable(data.NameTextMapHash),
-        rarity: data.RankLevel,
         baseExp: data.WeaponBaseExp,
+        stat: data.WeaponProp.filter(w => w.InitValue).map(w => {
+            return {
+                type: new Localizable(FlagMap[w.PropType]),
+                value: w.InitValue,
+                curve: w.Type
+            }
+        }),
         promote: Promotes[data.WeaponPromoteId],
     }
-    target[data.Id].prop = data.WeaponProp.filter(w => w.InitValue).map(w => {
-        return {
-            type: w.PropType,
-            value: w.InitValue,
-            curve: w.Type
-        }
-    });
     if (data.DestroyRule) target[data.Id].destroy = {
         id: data.DestroyReturnMaterial[0],
         count: data.DestroyReturnMaterialCount[0]
     }
     if (data.StoryId) target[data.Id].story = data.StoryId;
     if (data.AwakenMaterial) target[data.Id].refineItem = data.AwakenMaterial;
-    if (data.SkillAffix) target[data.Id].skill = data.SkillAffix[0];
+    if (data.SkillAffix) target[data.Id].skill = SkillAffix[data.SkillAffix[0]];
     Object.assign(Weapon, target);
 }
 

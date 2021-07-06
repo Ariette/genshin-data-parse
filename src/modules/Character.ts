@@ -1,7 +1,7 @@
 import { AvatarExcelConfigData, AvatarPromoteExcelConfigData, FetterInfoExcelConfigData } from '../loader.js';
-import { Localizable, Prop } from './Common.js';
-import buildPromotes, { Promote } from './Promote.js';
-import AvatarSkillDepot, { SkillDepot } from './Skill.js';
+import { Localizable, Prop, FlagMap } from './_Common.js';
+import buildPromotes, { Promote  } from './_Promote.js';
+import AvatarSkillDepot, { SkillDepot } from './_Skill.js';
 
 // Key List of AvatarExcelConfigData
 /*
@@ -101,7 +101,6 @@ interface Character {
     day?: string[];
     material?: string[];
 }
-
 const Promotes = buildPromotes(AvatarPromoteExcelConfigData, 'AvatarPromoteId');
 const SkillDepots = AvatarSkillDepot();
 const Character: {[id: number]: Character} = {};
@@ -109,27 +108,28 @@ for (const data of AvatarExcelConfigData) {
     const target = {};
     target[data.Id] = {
         id: data.Id,
+        name: new Localizable(data.NameTextMapHash),
+        desc: new Localizable(data.DescTextMapHash),
+        rarity: data.QualityType == 'QUALITY_ORANGE' ? 5 : 4,
+        weapontype: new Localizable(FlagMap[data.WeaponType]),
+        type: data.BodyType,
+        icon: data.IconName,
+        iconSide: data.SideIconName,
+        iconImages: data.ImageName,
+        available: data.UseType === 'AVATAR_FORMAL',
         stat: {
             baseAtk: data.AttackBase,
             baseDef: data.DefenseBase,
             baseHp: data.HpBase,
+            substat: Promotes[data.AvatarPromoteId][1]?.props?.[3]?.type,
             curve: data.PropGrowCurves.map(w => {
                 return {
-                    type: w.Type,
+                    type: new Localizable(FlagMap[w.Type]),
                     curve: w.GrowCurve
                 }
             }),
             upgrade: Promotes[data.AvatarPromoteId]
         },
-        type: data.BodyType,
-        desc: new Localizable(data.DescTextMapHash),
-        icon: data.IconName,
-        iconSide: data.SideIconName,
-        iconImages: data.ImageName,
-        name: new Localizable(data.NameTextMapHash),
-        weapontype: data.WeaponType,
-        available: data.UseType === 'AVATAR_FORMAL',
-        rarity: data.QualityType == 'QUALITY_ORANGE' ? 5 : 4
     }
     target[data.Id].skills = SkillDepots[data.SkillDepotId];
     Object.assign(Character, target);
