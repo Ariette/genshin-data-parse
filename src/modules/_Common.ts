@@ -22,6 +22,16 @@ export class Localizable {
     toJSON(): {[lang: string]: string} | string {
         return this.text
     }
+
+    setText(text: string): void {
+        this.text = text
+    }
+
+    static setText(text: string): Localizable {
+        const target = new Localizable(0);
+        target.setText(text);
+        return target;
+    }
 }
 
 export interface Unit {

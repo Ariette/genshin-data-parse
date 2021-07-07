@@ -16,12 +16,23 @@ const builder = {
     characters: {},
     weapons: {},
     materials: {},
-    foods: {},
-    artifacts: {}
+    foods: {}
 };
 
 
-// 이하 순서 함부로 바꾸지 말 것!!
+
+for (const id in Material) {
+    if (Material[id].domain) {
+        const days: Set<string> = new Set();
+        for (const key of Material[id].domain) {
+            if (!Dungeon[key]) continue;
+            Dungeon[key]?.day?.forEach(day => {
+                days.add(day);
+            })
+        }
+        Material[id].day = [...days];
+    }
+}
 
 for (const id in Cook) {
     builder.foods[id] = Cook[id];
@@ -37,23 +48,10 @@ for (const id in Cook) {
             ingredients: Cook[id].ingredients,
             character: Cook[id].character
         };
+        // 도감에 없는 재료도 인게임에 있다고 알림
         Material[item.id].available = true;
     })
     builder.foods[id].material = [...material];
-}
-
-for (const id in Material) {
-    if (!Material[id].available) continue;
-    builder.materials[id] = Material[id];
-    if (Material[id].domain) {
-        const days: Set<string> = new Set();
-        Material[id].domain.forEach(id => {
-            Dungeon[id].day.forEach(day => {
-                days.add(day);
-            })
-        })
-        builder.materials[id].day = [...days];
-    }
 }
 
 for (const id in Character) {
@@ -65,6 +63,8 @@ for (const id in Character) {
         for (const type in Character[id].skills.talent) {
             Character[id].skills.talent[type].upgrade.forEach(w => {
                 w.costs?.forEach(d => {
+                    // 도감에 없는 재료도 인게임에 있다고 알림
+                    Material[d.id].available = true;
                     // 지식의 왕관, 모라 제외
                     if (d.id != 104319 && d.id != 202) {
                         material.add(d.id)
@@ -82,7 +82,9 @@ for (const id in Character) {
     }
     if (Character[id].stat?.upgrade?.[0]?.costs?.[0]?.id) {
         Character[id].stat.upgrade.forEach(w => {
-            w.costs.slice(1, 0).forEach(d => {
+            w.costs.slice(1).forEach(d => {
+                // 도감에 없는 재료도 인게임에 있다고 알림
+                Material[d.id].available = true;
                 // 지식의 왕관, 모라 제외
                 if (d.id != 104319 && d.id != 202) {
                     material.add(d.id)
@@ -107,6 +109,10 @@ for (const id in Weapon) {
     const days: Set<string> = new Set();
     for (const promote of Weapon[id].promote) {
         for (const cost of promote.costs) {
+            // 도감에 없는 재료도 인게임에 있다고 알림
+            Material[cost.id].available = true;
+
+            // 모라 제외
             if (cost.id == 202) continue;
             material.add(cost.id);
             if (Material[cost.id].day) {
@@ -120,6 +126,12 @@ for (const id in Weapon) {
     }
     builder.weapons[id].material = [...material];
     builder.weapons[id].day = [...days];
+}
+
+for (const id in Material) {
+    if (!Material[id].available) continue;
+    builder.materials[id] = Material[id];
+    builder.materials[id].domain = Material[id].domain?.map(w => Dungeon[w]?.name).filter(w => w);
 }
 
 // Save Data

@@ -23,4 +23,5 @@ node_modules/
 /src/checkKey.js
 dist
 output
+tsconfig.tsbuildinfo
 /lib/GenshinData/**/*.converted.json

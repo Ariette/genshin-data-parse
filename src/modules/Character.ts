@@ -134,10 +134,13 @@ for (const data of AvatarExcelConfigData) {
     target[data.Id].skills = SkillDepots[data.SkillDepotId];
     Object.assign(Character, target);
 }
+
 for (const data of FetterInfoExcelConfigData) {
+    const elementAfter = new Localizable(data.AvatarVisionAfterTextMapHash);
+    const constAfter = new Localizable(data.AvatarConstellationAfterTextMapHash);
     const target: any = {
-        element: new Localizable(data.AvatarVisionBeforTextMapHash),
-        constellation: new Localizable(data.AvatarConstellationBeforTextMapHash),
+        element: elementAfter.text ? elementAfter : new Localizable(data.AvatarVisionBeforTextMapHash),
+        constellation: constAfter.text ? constAfter : new Localizable(data.AvatarConstellationBeforTextMapHash),
         association: new Localizable(data.AvatarNativeTextMapHash),
         title: new Localizable(data.AvatarTitleTextMapHash),
         region: data.AvatarAssocType.replace('ASSOC_TYPE_', ''),
@@ -151,5 +154,24 @@ for (const data of FetterInfoExcelConfigData) {
     if (data.InfoBirthMonth) target.birthday = data.InfoBirthMonth + '월 ' + data.InfoBirthDay + '일';
     Object.assign(Character[data.AvatarId], target)
 }
+
+// 기본 여행자 프로필을 복사해서 바람행자, 바위행자를 수동으로 추가해줌.
+// Fake Id 로는 임의로 1, 2, 3, 4, 5, 6, 7 (남행자)|| 11, 12, 13, 14, 15, 16, 17 (여행자)을 사용
+Character[4] = Object.assign({}, Character[10000005]);
+Character[4].id = 4;
+Character[4].name = Localizable.setText('아이테르 (바람)');
+Character[4].skills = SkillDepots[504];
+Character[14] = Object.assign({}, Character[10000007]);
+Character[14].id = 14;
+Character[14].name = Localizable.setText('루미네 (바람)');
+Character[14].skills = SkillDepots[704];
+Character[6] = Object.assign({}, Character[10000005]);
+Character[6].id = 6;
+Character[6].name = Localizable.setText('아이테르 (바위)');
+Character[6].skills = SkillDepots[506];
+Character[16] = Object.assign({}, Character[10000007]);
+Character[16].id = 16;
+Character[16].name = Localizable.setText('루미네 (바위)');
+Character[16].skills = SkillDepots[706];
 
 export default Character

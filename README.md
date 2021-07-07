@@ -1,5 +1,6 @@
 # GenshinData Parser
-  A simple parser for [Dimbreath/GenshinData](https://github.com/Dimbreath/GenshinData) for Korean users. (Maybe supports other languages. just change ```config.json```)  
+  A simple parser for [Dimbreath/GenshinData](https://github.com/Dimbreath/GenshinData) for Korean users.  
+  (Maybe supports other languages. just change ```config.json```)  
   This is the first time I implement Typescript, so the code could be very messy.
 
 ## Caution
