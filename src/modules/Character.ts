@@ -1,7 +1,8 @@
 import { AvatarExcelConfigData, AvatarPromoteExcelConfigData, FetterInfoExcelConfigData } from '../loader.js';
-import { Localizable, Prop, FlagMap } from './_Common.js';
-import buildPromotes, { Promote  } from './_Promote.js';
-import AvatarSkillDepot, { SkillDepot } from './_Skill.js';
+import { ICharacter } from './_Interface.js';
+import { Localizable, FlagMap } from './_Localize.js';
+import buildPromotes from './_Promote.js';
+import AvatarSkillDepot from './_Skill.js';
 
 // Key List of AvatarExcelConfigData
 /*
@@ -62,66 +63,33 @@ import AvatarSkillDepot, { SkillDepot } from './_Skill.js';
   'WeaponType'
 */
 
-// Key List of FetterInfoExcelConfigData
-/*
-
-*/
-
-interface Character {
-    stat: {
-        baseAtk: number;
-        baseDef: number;
-        baseHp: number;
-        curve: Prop[];
-        upgrade: Promote[];
-    }
-    type: string;
-    dsec: Localizable;
-    icon: string;
-    iconSide: string;
-    id: number;
-    iconImage: string;
-    name: Localizable;
-    skills: SkillDepot;
-    weapontype: string;
-    available: boolean;
-    rarity: number;
-    element?: Localizable;
-    constellation?: Localizable;
-    association?: Localizable;
-    title?: Localizable;
-    region?: string;
-    cv?: {
-        cn?: Localizable;
-        jp?: Localizable;
-        en?: Localizable;
-        ko?: Localizable;
-    };
-    birthday?: string;
-    day?: string[];
-    material?: string[];
-}
 const Promotes = buildPromotes(AvatarPromoteExcelConfigData, 'AvatarPromoteId');
-const SkillDepots = AvatarSkillDepot();
-const Character: {[id: number]: Character} = {};
+const SkillDepots = AvatarSkillDepot;
+const Character: {[id: number]: ICharacter} = {};
 for (const data of AvatarExcelConfigData) {
-    const target = {};
-    target[data.Id] = {
+    Character[data.Id] = {
         id: data.Id,
         name: new Localizable(data.NameTextMapHash),
+        title: null,
         desc: new Localizable(data.DescTextMapHash),
-        rarity: data.QualityType == 'QUALITY_ORANGE' ? 5 : 4,
         weapontype: new Localizable(FlagMap[data.WeaponType]),
+        element: null,
         type: data.BodyType,
+        substat: Promotes[data.AvatarPromoteId][1]?.props?.[3]?.type,
+        affiliation: null,
+        region: null,
+        rarity: data.QualityType == 'QUALITY_ORANGE' ? 5 : 4,
+        birthday: null,
+        constellation: null,
+        cv: null,
         icon: data.IconName,
         iconSide: data.SideIconName,
-        iconImages: data.ImageName,
-        available: data.UseType === 'AVATAR_FORMAL',
+        iconImage: data.ImageName,
+        skills: SkillDepots[data.SkillDepotId],
         stat: {
             baseAtk: data.AttackBase,
             baseDef: data.DefenseBase,
             baseHp: data.HpBase,
-            substat: Promotes[data.AvatarPromoteId][1]?.props?.[3]?.type,
             curve: data.PropGrowCurves.map(w => {
                 return {
                     type: new Localizable(FlagMap[w.Type]),
@@ -130,29 +98,27 @@ for (const data of AvatarExcelConfigData) {
             }),
             upgrade: Promotes[data.AvatarPromoteId]
         },
+        available: data.UseType == 'AVATAR_FORMAL',
+        day: null,
+        material: null
     }
-    target[data.Id].skills = SkillDepots[data.SkillDepotId];
-    Object.assign(Character, target);
 }
 
 for (const data of FetterInfoExcelConfigData) {
     const elementAfter = new Localizable(data.AvatarVisionAfterTextMapHash);
     const constAfter = new Localizable(data.AvatarConstellationAfterTextMapHash);
-    const target: any = {
-        element: elementAfter.text ? elementAfter : new Localizable(data.AvatarVisionBeforTextMapHash),
-        constellation: constAfter.text ? constAfter : new Localizable(data.AvatarConstellationBeforTextMapHash),
-        association: new Localizable(data.AvatarNativeTextMapHash),
-        title: new Localizable(data.AvatarTitleTextMapHash),
-        region: data.AvatarAssocType.replace('ASSOC_TYPE_', ''),
-        cv: {
-            cn: new Localizable(data.CvChineseTextMapHash),
-            jp: new Localizable(data.CvJapaneseTextMapHash),
-            en: new Localizable(data.CvEnglishTextMapHash),
-            ko: new Localizable(data.CvKoreanTextMapHash)
-        }
+    Character[data.AvatarId].element = elementAfter.text ? elementAfter : new Localizable(data.AvatarVisionBeforTextMapHash),
+    Character[data.AvatarId].constellation = constAfter.text ? constAfter : new Localizable(data.AvatarConstellationBeforTextMapHash),
+    Character[data.AvatarId].affiliation = new Localizable(data.AvatarNativeTextMapHash),
+    Character[data.AvatarId].title = new Localizable(data.AvatarTitleTextMapHash),
+    Character[data.AvatarId].region = data.AvatarAssocType.replace('ASSOC_TYPE_', ''),
+    Character[data.AvatarId].cv = {
+        cn: new Localizable(data.CvChineseTextMapHash),
+        jp: new Localizable(data.CvJapaneseTextMapHash),
+        en: new Localizable(data.CvEnglishTextMapHash),
+        ko: new Localizable(data.CvKoreanTextMapHash)
     }
-    if (data.InfoBirthMonth) target.birthday = data.InfoBirthMonth + '월 ' + data.InfoBirthDay + '일';
-    Object.assign(Character[data.AvatarId], target)
+    if (data.InfoBirthMonth) Character[data.AvatarId].birthday = data.InfoBirthMonth + '월 ' + data.InfoBirthDay + '일';
 }
 
 // 기본 여행자 프로필을 복사해서 바람행자, 바위행자를 수동으로 추가해줌.

@@ -1,6 +1,7 @@
 import { WeaponCodexExcelConfigData, WeaponExcelConfigData, WeaponPromoteExcelConfigData, EquipAffixExcelConfigData } from '../loader.js';
-import { Localizable, Unit, Prop, FlagMap } from './_Common.js';
-import buildPromote, { Promote } from './_Promote.js'
+import { Localizable, FlagMap } from './_Localize.js';
+import buildPromote from './_Promote.js'
+import { IWeapon, IWeaponSkill } from './_Interface.js';
 
 // Key List of WeaponExcelConfigData
 /* 
@@ -43,37 +44,9 @@ import buildPromote, { Promote } from './_Promote.js'
   'WeaponPromoteId'
 */
 
-interface Weapon {
-    icon: string;
-    iconAwake: string;
-    desc: Localizable;
-    id: number;
-    type: Localizable;
-    name: Localizable;
-    rarity: number;
-    baseExp: number;
-    promote: Promote[];
-    stat: Prop[];
-    destroy: Unit;
-    story?: number;
-    refineItem?: number;
-    skill?: WeaponSkill;
-    available?: boolean;
-}
-
-interface WeaponSkill {
-    name: Localizable;
-    desc: {
-        r1: Localizable[];
-        r2: Localizable[];
-        r3: Localizable[];
-        r4: Localizable[];
-        r5: Localizable[];
-    }
-}
-
 const Promotes = buildPromote(WeaponPromoteExcelConfigData, 'WeaponPromoteId');
-const SkillAffix: {[id: number]: WeaponSkill} = {};
+
+const SkillAffix: {[id: number]: IWeaponSkill} = {};
 for (const data of EquipAffixExcelConfigData) {
     const level = data.AffixId - ( data.Id * 10 ) + 1;
     if (!SkillAffix[data.Id]) SkillAffix[data.Id] = {
@@ -83,10 +56,9 @@ for (const data of EquipAffixExcelConfigData) {
     SkillAffix[data.Id].desc['r' + level] = new Localizable(data.DescTextMapHash);
 }
 
-const Weapon: {[id: number]: Weapon} = {}
+const Weapon: {[id: number]: IWeapon} = {}
 for (const data of WeaponExcelConfigData) {
-    const target = {};
-    target[data.Id] = {
+    Weapon[data.Id] = {
         id: data.Id,
         name: new Localizable(data.NameTextMapHash),
         desc: new Localizable(data.DescTextMapHash),
@@ -102,16 +74,15 @@ for (const data of WeaponExcelConfigData) {
                 curve: w.Type
             }
         }),
-        promote: Promotes[data.WeaponPromoteId],
+        promote: Promotes[data.WeaponPromoteId].slice(1),
     }
-    if (data.DestroyRule) target[data.Id].destroy = {
+    if (data.DestroyRule) Weapon[data.Id].destroy = {
         id: data.DestroyReturnMaterial[0],
         count: data.DestroyReturnMaterialCount[0]
     }
-    if (data.StoryId) target[data.Id].story = data.StoryId;
-    if (data.AwakenMaterial) target[data.Id].refineItem = data.AwakenMaterial;
-    if (data.SkillAffix) target[data.Id].skill = SkillAffix[data.SkillAffix[0]];
-    Object.assign(Weapon, target);
+    if (data.StoryId) Weapon[data.Id].story = data.StoryId;
+    if (data.AwakenMaterial) Weapon[data.Id].refineItem = data.AwakenMaterial;
+    if (data.SkillAffix) Weapon[data.Id].skill = SkillAffix[data.SkillAffix[0]];
 }
 
 

@@ -1,5 +1,6 @@
 import { MaterialExcelConfigData, MaterialSourceDataExcelConfigData, MaterialCodexExcelConfigData } from '../loader.js';
-import { Localizable, Unit } from './_Common.js';
+import { Localizable } from './_Localize.js';
+import { IMaterial } from './_Interface.js';
 
 // Key List of MaterialExcelConfigData
 /*
@@ -42,33 +43,9 @@ import { Localizable, Unit } from './_Common.js';
   'Weight'
 */
 
-interface Material {
-    id: number;
-    name: Localizable;
-    desc: Localizable;
-    effect: Localizable;
-    icon: string;
-    type: Localizable;
-    rarity: number;
-    stackLimit?: number;
-    source?: Localizable[];
-    domain?: number[];
-    available?: boolean;
-    food?: {
-        type: Localizable;
-        ingredients: Unit[];
-        character?: number;
-    };
-    day?: string[];
-    character? : (number|string)[];
-    weapon?: (number|string)[];
-    recipe?: (number|string)[];
-}
-
-const Material: {[id: number]: Material} = {};
+const Material: {[id: number]: IMaterial} = {};
 for (const data of MaterialExcelConfigData) {
-    const target = {};
-    target[data.Id] = {
+    Material[data.Id] = {
         id: data.Id,
         name: new Localizable(data.NameTextMapHash),
         desc: new Localizable(data.DescTextMapHash),
@@ -77,19 +54,13 @@ for (const data of MaterialExcelConfigData) {
         type: new Localizable(data.TypeDescTextMapHash),
         rarity: data.RankLevel
     }
-    if (data.StackLimit) target[data.Id].stackLimit = data.StackLimit;
-    Object.assign(Material, target);
+    if (data.StackLimit) Material[data.Id].stackLimit = data.StackLimit;
 }
 
 // Add source data
 for (const data of MaterialSourceDataExcelConfigData) {
-    const target: any = {
-        source: data.TextList.map(id => new Localizable(id)).filter(w => w.text)
-    };
-    if (data.DungeonList) {
-        target.domain = data.DungeonList.filter(id => id != 0);
-    }
-    Object.assign(Material[data.Id], target);
+    Material[data.Id].source = data.TextList.map(id => new Localizable(id)).filter(w => w.text);
+    if (data.DungeonList) Material[data.Id].domain = data.DungeonList.filter(id => id != 0);
 }
 
 // Checking availability by using codex.

@@ -45,12 +45,20 @@ for (const id in Cook) {
     Cook[id].foods.forEach(item => {
         Material[item.id].food = {
             type: Cook[id].type,
-            ingredients: Cook[id].ingredients,
-            character: Cook[id].character
+            ingredients: Cook[id].ingredients
         };
         // 도감에 없는 재료도 인게임에 있다고 알림
         Material[item.id].available = true;
-    })
+    });
+    if (Cook[id].special) {
+        Material[Cook[id].special.id].food = {
+            type: Cook[id].type,
+            ingredients: Cook[id].ingredients,
+            character: Cook[id].special.character
+        };
+        // 도감에 없는 재료도 인게임에 있다고 알림
+        Material[Cook[id].special.id].available = true;
+    }
     builder.foods[id].material = [...material];
 }
 
@@ -108,6 +116,7 @@ for (const id in Weapon) {
     const material: Set<number> = new Set();
     const days: Set<string> = new Set();
     for (const promote of Weapon[id].promote) {
+        if (!promote.costs?.length) continue;
         for (const cost of promote.costs) {
             // 도감에 없는 재료도 인게임에 있다고 알림
             Material[cost.id].available = true;

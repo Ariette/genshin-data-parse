@@ -1,5 +1,6 @@
 import { CookBonusExcelConfigData, CookRecipeExcelConfigData } from '../loader.js';
-import { Localizable, Unit, FlagMap } from './_Common.js';
+import { Localizable, FlagMap } from './_Localize.js';
+import { ICook } from './_Interface.js';
 
 // CookRecipeExcelConfigData
 /*
@@ -24,29 +25,14 @@ import { Localizable, Unit, FlagMap } from './_Common.js';
   'AvatarId' : 특수 요리 띄우는 캐릭터
   'BonusType'
   'ComplexParamVec'
-  'ParamVec'
+  'ParamVec' : 특수 요리 Material id, Array로 되어있긴 하지만 특수요리가 둘 이상인 음식은 없으므로 첫 번째 값만 사용됨
   'RecipeId' : 레시피 id
 */
 
 
-
-interface Cook {
-    id: number;
-    type: Localizable;
-    desc: Localizable;
-    effect: Localizable[];
-    icon: string;
-    ingredients: Unit[];
-    foods: Unit[];
-    name: Localizable;
-    rarity: number;
-    character?: number;
-}
-
-const Cook: {[id: number]: Cook} = {};
+const Cook: {[id: number]: ICook} = {};
 for (const data of CookRecipeExcelConfigData) {
-    const target = {};
-    target[data.Id] = {
+    Cook[data.Id] = {
         id: data.Id,
         name: new Localizable(data.NameTextMapHash),
         desc: new Localizable(data.DescTextMapHash),
@@ -67,9 +53,11 @@ for (const data of CookRecipeExcelConfigData) {
             }
         }),
     }
-    Object.assign(Cook, target);
 }
 for (const data of CookBonusExcelConfigData) {
-    Cook[data.RecipeId].character = data.AvatarId;
+    Cook[data.RecipeId].special = {
+        id: data.ParamVec[0],
+        character: data.AvatarId,
+    }
 }
 export default Cook

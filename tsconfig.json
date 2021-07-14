@@ -3,6 +3,7 @@
     "rootDir": ".",
     "outDir": ".",
     "resolveJsonModule": true,
+    "sourceMap": true,
     "types":[],
     "composite": true
   },

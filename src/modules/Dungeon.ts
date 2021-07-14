@@ -1,5 +1,6 @@
 import { DungeonExcelConfigData, DailyDungeonConfigData } from '../loader.js';
-import { Localizable } from './_Common.js';
+import { Localizable } from './_Localize.js';
+import { IDungeon } from './_Interface.js';
 
 // Key lists of DungeonExcelConfigData
 /*
@@ -42,21 +43,7 @@ import { Localizable } from './_Common.js';
   'Type'
 */
 
-interface Dungeon {
-    id: number;
-    name: Localizable;
-    desc: Localizable;
-    series?: Localizable;
-    lv?: number;
-    ar?: number;
-    recommend?: {
-        lv?: number;
-        element?: string[];
-    };
-    day?: Set<string>;
-}
-
-const Dungeons: {[id: number]: Dungeon} = {}
+const Dungeons: {[id: number]: IDungeon} = {}
 for (const data of DungeonExcelConfigData) {
     Dungeons[data.Id] = {
         id: data.Id,
