@@ -96,7 +96,7 @@ for (const data of AvatarExcelConfigData) {
                     curve: w.GrowCurve
                 }
             }),
-            upgrade: Promotes[data.AvatarPromoteId]
+            upgrade: Promotes[data.AvatarPromoteId].slice(1)
         },
         available: data.UseType == 'AVATAR_FORMAL',
         day: null,
@@ -127,17 +127,21 @@ Character[4] = Object.assign({}, Character[10000005]);
 Character[4].id = 4;
 Character[4].name = Localizable.setText('아이테르 (바람)');
 Character[4].skills = SkillDepots[504];
+Character[4].element = Localizable.setText('바람');
 Character[14] = Object.assign({}, Character[10000007]);
 Character[14].id = 14;
 Character[14].name = Localizable.setText('루미네 (바람)');
 Character[14].skills = SkillDepots[704];
+Character[14].element = Localizable.setText('바람');
 Character[6] = Object.assign({}, Character[10000005]);
 Character[6].id = 6;
 Character[6].name = Localizable.setText('아이테르 (바위)');
 Character[6].skills = SkillDepots[506];
+Character[6].element = Localizable.setText('바위');
 Character[16] = Object.assign({}, Character[10000007]);
 Character[16].id = 16;
 Character[16].name = Localizable.setText('루미네 (바위)');
 Character[16].skills = SkillDepots[706];
+Character[16].element = Localizable.setText('바위');
 
 export default Character

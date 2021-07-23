@@ -1,21 +1,26 @@
 import { TextMap, ManualTextMapConfigData } from '../loader.js'
+import config from '../../config.json'
 
 export class Localizable {
     id: number;
     text: {[lang: string]: string} | string;
+    en: string;
 
     constructor(keyMap: number) {
         this.id = keyMap;
-        const langs = Object.keys(TextMap);
-        if (langs.length === 0) {
+        const lang = config.lang;
+        if (lang.length === 0) {
             this.text = undefined;
-        } else if (langs.length === 1) {
-            this.text = TextMap[langs[0]][keyMap] || undefined;
+            this.en = undefined;
+        } else if (lang.length === 1) {
+            this.text = TextMap[lang[0]][keyMap] || undefined;
+            this.en = TextMap["En"][keyMap] || undefined;
         } else {
             this.text = {};
-            for (const lang of langs) {
-                this.text[lang] = TextMap[lang][keyMap] || undefined;
+            for (const l of lang) {
+                this.text[l] = TextMap[l][keyMap] || undefined;
             }
+            this.en = TextMap["En"][keyMap] || undefined;
         }
     }
 

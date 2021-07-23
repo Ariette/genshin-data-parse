@@ -60,6 +60,8 @@ for (const id in Cook) {
         Material[Cook[id].special.id].available = true;
     }
     builder.foods[id].material = [...material];
+    // 호요랩에 icon이 없으니 fandom 위키를 이용하기 위해 icon값을 수정해줌
+    builder.foods[id].icon = Cook[id].name.en.replace(/ /g, '_');
 }
 
 for (const id in Character) {
@@ -107,6 +109,12 @@ for (const id in Character) {
             })
         })
     }
+    if (Character[id].skills?.talent) {
+        // 호요랩에 icon이 없으니 fandom 위키를 이용하기 위해 icon값을 수정해줌
+        Character[id].skills.talent.normal.icon = Character[id].skills.talent.normal.name.en.replace(/ /g, '_').replace('Normal_Attack:_', '');
+        Character[id].skills.talent.elemental.icon = Character[id].skills.talent.elemental.name.en.replace(/ /g, '_');
+        Character[id].skills.talent.burst.icon = Character[id].skills.talent.burst.name.en.replace(/ /g, '_');
+    }
     builder.characters[id].material = [...material];
     builder.characters[id].day = [...days];
 }
@@ -141,6 +149,8 @@ for (const id in Material) {
     if (!Material[id].available) continue;
     builder.materials[id] = Material[id];
     builder.materials[id].domain = Material[id].domain?.map(w => Dungeon[w]?.name).filter(w => w);
+    // 호요랩에 icon이 없으니 fandom 위키를 이용하기 위해 icon값을 수정해줌
+    builder.materials[id].icon = Material[id].name.en.replace(/ /g, '_');
 }
 
 // Save Data
