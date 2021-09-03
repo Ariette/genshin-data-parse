@@ -81,7 +81,7 @@ for (const data of ProudSkillExcelConfigData) {
     }
     const upgrade: IUpgrade = {
         level: data.Level,
-        params: data.ParamList.filter(w => w != 0),
+        params: data.ParamList,
         costs: undefined
     }
     upgrade.ascension = data.BreakLevel || 0;

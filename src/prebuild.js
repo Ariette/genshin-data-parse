@@ -36,5 +36,5 @@ function DungeonExcelConfigData() {
     }
 }
 
-// MaterialSourceDataExcelConfigData();
+MaterialSourceDataExcelConfigData();
 DungeonExcelConfigData();
