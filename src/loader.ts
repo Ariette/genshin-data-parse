@@ -212,7 +212,7 @@ export { default as DragonSpineStageExcelConfigData } from '../lib/GenshinData/E
 */
 
 // Dungeons = Abyss Domain
-export { default as DungeonExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonExcelConfigData.converted.json';
+export { default as DungeonExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonExcelConfigData.json';
 export { default as DailyDungeonConfigData } from '../lib/GenshinData/ExcelBinOutput/DailyDungeonConfigData.json';
 /*
 export { default as DungeonEntryExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonEntryExcelConfigData.json';
@@ -367,7 +367,7 @@ export { default as MatchPunishExcelConfigData } from '../lib/GenshinData/ExcelB
 // Materials
 export { default as MaterialCodexExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MaterialCodexExcelConfigData.json';
 export { default as MaterialExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MaterialExcelConfigData.json';
-export { default as MaterialSourceDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MaterialSourceDataExcelConfigData.converted.json';
+export { default as MaterialSourceDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MaterialSourceDataExcelConfigData.json';
 
 
 /*

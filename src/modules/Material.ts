@@ -60,7 +60,7 @@ for (const data of MaterialExcelConfigData) {
 // Add source data
 for (const data of MaterialSourceDataExcelConfigData) {
     Material[data.Id].source = data.TextList.map(id => new Localizable(id)).filter(w => w.text);
-    if (data.DungeonList) Material[data.Id].domain = data.DungeonList.filter(id => id != 0);
+    // if (data.DungeonList) Material[data.Id].domain = data.DungeonList.filter(id => id != 0);
 }
 
 // Checking availability by using codex.
