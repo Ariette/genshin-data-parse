@@ -1,0 +1,68 @@
+# This is a basic workflow to help you get started with Actions
+
+name: auto-update
+
+# Controls when the workflow will run
+on:
+  # Allows you to run this workflow manually from the Actions tab or through HTTP API
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build:
+    name: 'Auto-update'
+    runs-on: ubuntu-latest
+
+    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    # Checkout the repository to the GitHub Actions runner
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.CI_TOKEN }}
+        submodules: true
+
+    # Update references
+    - name: Git Sumbodule Update
+      run: |
+        git pull --recurse-submodules
+        git submodule update --remote --recursive
+        
+    - name: Check Commit Message
+      id: submodule
+      run: |
+        cd lib/GenshinData
+        echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")" >> $GITHUB_ENV
+        cd ../..
+
+    - name: Commit update
+      run: |
+        git config --global user.name 'Git bot'
+        git config --global user.email 'bot@noreply.github.com'
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+        git commit -m ${{ submodule.COMMIT_MESSAGE }} && git push || echo "No changes to commit" && exit 1
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    
+    - name: Build Data
+      run: |
+        npm ci
+        npm run build
+        npm run start
+    
+    - name: Release Data
+      id: create_release
+      uses: ncipollo/release-action@v1
+      with:
+        name: ${{ submodule.COMMIT_MESSAGE }}
+        artifacts: "/output"
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag: "auto"
+        
