@@ -3,7 +3,7 @@ import Material from './modules/Material.js';
 import Weapon from './modules/Weapon.js';
 import Character from './modules/Character.js';
 import Cook from './modules/Cook.js';
-import Dungeon from './modules/Dungeon.js'
+// import Dungeon from './modules/Dungeon.js'
 
 function saveToJson(obj, filename) {
     const data = JSON.stringify(obj, null, 2);
@@ -20,6 +20,8 @@ const builder = {
 };
 
 
+/*
+이제 day 정보를 domain에서 받지 않음
 
 for (const id in Material) {
     if (Material[id].domain) {
@@ -33,6 +35,8 @@ for (const id in Material) {
         Material[id].day = [...days];
     }
 }
+
+*/
 
 for (const id in Cook) {
     builder.foods[id] = Cook[id];
@@ -148,7 +152,6 @@ for (const id in Weapon) {
 for (const id in Material) {
     if (!Material[id].available) continue;
     builder.materials[id] = Material[id];
-    builder.materials[id].domain = Material[id].domain?.map(w => Dungeon[w]?.name).filter(w => w);
     // 호요랩에 icon이 없으니 fandom 위키를 이용하기 위해 icon값을 수정해줌
     builder.materials[id].icon = Material[id].name.en.replace(/ /g, '_');
 }

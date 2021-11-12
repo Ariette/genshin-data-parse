@@ -1,3 +1,6 @@
+// Not use anymore
+
+
 import { DungeonExcelConfigData, DailyDungeonConfigData } from '../loader.js';
 import { Localizable } from './_Localize.js';
 import { IDungeon } from './_Interface.js';

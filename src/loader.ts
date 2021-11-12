@@ -212,10 +212,10 @@ export { default as DragonSpineStageExcelConfigData } from '../lib/GenshinData/E
 */
 
 // Dungeons = Abyss Domain
-export { default as DungeonExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonExcelConfigData.json';
-export { default as DailyDungeonConfigData } from '../lib/GenshinData/ExcelBinOutput/DailyDungeonConfigData.json';
-/*
+// export { default as DungeonExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonExcelConfigData.json';
+// export { default as DailyDungeonConfigData } from '../lib/GenshinData/ExcelBinOutput/DailyDungeonConfigData.json';
 export { default as DungeonEntryExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonEntryExcelConfigData.json';
+/*
 export { default as DungeonChallengeConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonChallengeConfigData.json';
 export { default as DungeonElementChallengeExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonElementChallengeExcelConfigData.json';
 export { default as DungeonLevelEntityConfigData } from '../lib/GenshinData/ExcelBinOutput/DungeonLevelEntityConfigData.json';

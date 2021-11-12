@@ -1,4 +1,4 @@
-import { MaterialExcelConfigData, MaterialSourceDataExcelConfigData, MaterialCodexExcelConfigData } from '../loader.js';
+import { MaterialExcelConfigData, MaterialSourceDataExcelConfigData, MaterialCodexExcelConfigData, DungeonEntryExcelConfigData } from '../loader.js';
 import { Localizable } from './_Localize.js';
 import { IMaterial } from './_Interface.js';
 
@@ -60,7 +60,24 @@ for (const data of MaterialExcelConfigData) {
 // Add source data
 for (const data of MaterialSourceDataExcelConfigData) {
     Material[data.Id].source = data.TextList.map(id => new Localizable(id)).filter(w => w.text);
+    // 데이터 누락됨. 나중에 고쳐지면 주석 해제할 것.
     // if (data.DungeonList) Material[data.Id].domain = data.DungeonList.filter(id => id != 0);
+}
+
+
+// Add day data
+for (const data of DungeonEntryExcelConfigData) {
+    if (!data?.['DescriptionCycleRewardList']?.[3].length) continue;
+    const items = data['DescriptionCycleRewardList'];
+    items[0].forEach(item => {
+        Material[item].day = ['Monday', 'Thursday']
+    });
+    items[1].forEach(item => {
+        Material[item].day = ['Tuesday', 'Friday']
+    });
+    items[2].forEach(item => {
+        Material[item].day = ['Wednesday', 'Saturday']
+    });
 }
 
 // Checking availability by using codex.
