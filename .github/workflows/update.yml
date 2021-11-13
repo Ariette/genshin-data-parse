@@ -67,3 +67,10 @@ jobs:
         artifacts: "release.tar.gz"
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: ${{ env.SHORT_SHA }}
+
+    - name: Ping Updates
+      uses: peter-evans/repository-dispatch@v1
+      with:
+        token: ${{ secrets.TOKEN }}
+        repository: Ariette/genshin-search-bot
+        event-type: new-release
