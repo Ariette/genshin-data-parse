@@ -157,6 +157,10 @@ for (const id in Material) {
 }
 
 // Save Data
-for (const keys in builder) {
-    saveToJson(builder[keys], keys + '.json');
+try {
+    fs.mkdirSync('output');
+} finally {
+    for (const keys in builder) {
+        saveToJson(builder[keys], keys + '.json');
+    }
 }
