@@ -143,5 +143,15 @@ Character[16].id = 16;
 Character[16].name = Localizable.setText('루미네 (바위)');
 Character[16].skills = SkillDepots[706];
 Character[16].element = Localizable.setText('바위');
+Character[7] = Object.assign({}, Character[10000005]);
+Character[7].id = 7;
+Character[7].name = Localizable.setText('아이테르 (번개)');
+Character[7].skills = SkillDepots[507];
+Character[7].element = Localizable.setText('번개');
+Character[17] = Object.assign({}, Character[10000007]);
+Character[17].id = 17;
+Character[17].name = Localizable.setText('루미네 (번개)');
+Character[17].skills = SkillDepots[707];
+Character[17].element = Localizable.setText('번개');
 
 export default Character

@@ -31,8 +31,6 @@ jobs:
         submodules: true
 
     - name: Check Commit Message
-      id: submodule
-      working-directory: lib/GenshinData
       run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")" >> $GITHUB_ENV
 
     - name: Build Script
