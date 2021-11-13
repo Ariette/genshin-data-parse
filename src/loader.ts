@@ -22,7 +22,7 @@ function loadTextMap(): {[lang: string]: TextMap} {
     for (const l of config.lang) {
         TextMap[l] = loadJson('TextMap/TextMap' + l + '.json');
     }
-    if (!TextMap["En"]) TextMap["En"] = loadJson('TextMap/TextMapEn.json');
+    if (!TextMap["EN"]) TextMap["EN"] = loadJson('TextMap/TextMapEN.json');
     return TextMap
 }
 

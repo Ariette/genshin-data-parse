@@ -36,15 +36,13 @@ jobs:
       working-directory: lib/GenshinData
       run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")" >> $GITHUB_ENV
 
-    - name: Build Data
+    - name: Build Script
       run: |
         npm ci
         npm run build
 
     - name: Run Script
-      run: |
-        find lib/GenshinData/TextMap
-        npm run start
+      run: npm run start
 
     - name: Release Data
       id: create_release

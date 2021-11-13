@@ -14,13 +14,13 @@ export class Localizable {
             this.en = undefined;
         } else if (lang.length === 1) {
             this.text = TextMap[lang[0]][keyMap] || undefined;
-            this.en = TextMap["En"][keyMap] || undefined;
+            this.en = TextMap["EN"][keyMap] || undefined;
         } else {
             this.text = {};
             for (const l of lang) {
                 this.text[l] = TextMap[l][keyMap] || undefined;
             }
-            this.en = TextMap["En"][keyMap] || undefined;
+            this.en = TextMap["EN"][keyMap] || undefined;
         }
     }
 
