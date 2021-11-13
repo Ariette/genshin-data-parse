@@ -40,6 +40,10 @@ jobs:
       run: |
         npm ci
         npm run build
+
+    - name: Run Script
+      run: |
+        find lib/GenshinData/TextMap
         npm run start
 
     - name: Release Data

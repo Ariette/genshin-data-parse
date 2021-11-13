@@ -34,10 +34,8 @@ jobs:
         
     - name: Check Commit Message
       id: submodule
-      run: |
-        cd lib/GenshinData
-        echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")" >> $GITHUB_ENV
-        cd ../..
+      working-directory: lib/GenshinData
+      run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")" >> $GITHUB_ENV
 
     - name: Commit update
       run: |
