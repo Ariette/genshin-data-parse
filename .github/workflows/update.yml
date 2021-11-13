@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: auto-update
+name: update-n-release
 
 # Controls when the workflow will run
 on:
@@ -10,7 +10,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   build:
-    name: 'Auto-update'
+    name: 'update'
     runs-on: ubuntu-latest
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
@@ -19,19 +19,17 @@ jobs:
         shell: bash
 
     steps:
-    # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         submodules: true
 
-    # Update references
     - name: Git Sumbodule Update
       run: |
         git pull --recurse-submodules
         git submodule update --remote --recursive
-        
+
     - name: Check Commit Message
       id: submodule
       working-directory: lib/GenshinData
@@ -48,19 +46,22 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-version: '14'
-    
-    - name: Build Data
+
+    - name: Build Script
       run: |
         npm ci
         npm run build
+
+    - name: Run Script
+      run: |
         npm run start
-    
+        tar -zcf release.tar.gz output
+
     - name: Release Data
       id: create_release
       uses: ncipollo/release-action@v1
       with:
         name: ${{ env.COMMIT_MESSAGE }}
-        artifacts: "/output"
+        artifacts: "release.tar.gz"
         token: ${{ secrets.GITHUB_TOKEN }}
-        tag: "auto"
-        
+        tag: "main"

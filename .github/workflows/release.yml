@@ -24,13 +24,12 @@ jobs:
       with:
         node-version: '14'
 
-    # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         submodules: true
-        
+
     - name: Check Commit Message
       id: submodule
       working-directory: lib/GenshinData
@@ -42,14 +41,15 @@ jobs:
         npm run build
 
     - name: Run Script
-      run: npm run start
+      run: |
+        npm run start
+        tar -zcf release.tar.gz output
 
     - name: Release Data
       id: create_release
       uses: ncipollo/release-action@v1
       with:
         name: ${{ env.COMMIT_MESSAGE }}
-        artifacts: "/output"
+        artifacts: "release.tar.gz"
         token: ${{ secrets.GITHUB_TOKEN }}
         tag: "main"
-        
