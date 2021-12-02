@@ -128,13 +128,13 @@ for (const data of AvatarSkillDepotExcelConfigData) {
             elemental: Skills[data.Skills[1]],
             burst: Skills[data.EnergySkill]
         },
-        passive: data.InherentProudSkillOpens.filter(w => w.ProudSkillGroupId).map(w => {
+        passive: data.InherentProudSkillOpens.filter(w => w.ProudSkillGroupId && Prouds[w.ProudSkillGroupId].name.text).map(w => {
             return {
-                id: Prouds[w["ProudSkillGroupId"]].id,
-                name: Prouds[w["ProudSkillGroupId"]].name,
-                desc: Prouds[w["ProudSkillGroupId"]].desc,
-                icon: Prouds[w["ProudSkillGroupId"]].icon,
-                ascension: Prouds[w["ProudSkillGroupId"]].ascension
+                id: Prouds[w.ProudSkillGroupId].id,
+                name: Prouds[w.ProudSkillGroupId].name,
+                desc: Prouds[w.ProudSkillGroupId].desc,
+                icon: Prouds[w.ProudSkillGroupId].icon,
+                ascension: Prouds[w.ProudSkillGroupId].ascension
             }
         }),
         constellation: data.Talents.map(w => Talents[w])
