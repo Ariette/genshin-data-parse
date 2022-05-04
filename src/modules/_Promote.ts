@@ -2,50 +2,55 @@ import { Localizable, FlagMap } from './_Localize.js';
 import { IPromote } from './_Interface.js';
 
 interface PromoteConfig {
-    PromoteLevel?: number;
-    BreakLevel?: number;
-    PromoteAudio?: unknown;
-    ScoinCost?: number;
-    CoinCost?: number;
-    CostItems: {
-        Id?: number,
-        Count?: number
-    }[];
-    UnlockMaxLevel?: number;
-    AddProps?: {
-        PropType?: string;
-        Value?: number;
-    }[];
-    RequiredPlayerLevel?: number;
-    [PropName: string]: any;
+  promoteLevel?: number;
+  breakLevel?: number;
+  promoteAudio?: unknown;
+  scoinCost?: number;
+  coinCost?: number;
+  costItems: {
+    id?: number;
+    count?: number;
+  }[];
+  unlockMaxLevel?: number;
+  addProps?: {
+    propType?: string;
+    value?: number;
+  }[];
+  requiredPlayerLevel?: number;
+  [propName: string]: any;
 }
 
-export default (promoteConfigs: PromoteConfig[], idKey: string): {[id: number]: IPromote[]} => {
-    const promotes: {[id: number]: IPromote[]} = {}
-    for (const data of promoteConfigs) {
-        const promote: IPromote = {
-            ascension: data.PromoteLevel || data.BreakLevel || 0
-        }
-        if (data.AddProps.length) promote.props = data.AddProps.filter(w => w.Value).map(w => {
-            return {
-                type: new Localizable(FlagMap[w.PropType]),
-                value: w.Value
-            }
+export default (promoteConfigs: PromoteConfig[], idKey: string): { [id: number]: IPromote[] } => {
+  const promotes: { [id: number]: IPromote[] } = {};
+  for (const data of promoteConfigs) {
+    const promote: IPromote = {
+      ascension: data.promoteLevel || data.breakLevel || 0,
+    };
+    if (data.addProps.length)
+      promote.props = data.addProps
+        .filter((w) => w.value)
+        .map((w) => {
+          return {
+            type: new Localizable(FlagMap[w.propType]),
+            value: w.value,
+          };
         });
-        promote.costs = data.CostItems.filter(w => w.Id).map(w => {
-            return {
-                id: w.Id,
-                count: w.Count
-            }
-        });
-        if (data.ScoinCost || data.CoinCost) {
-            promote.costs.push({
-                id: 202,
-                count: data.ScoinCost || data.CoinCost
-            });
+    promote.costs = data.costItems
+      .filter((w) => w.id)
+      .map((w) => {
+        return {
+          id: w.id,
+          count: w.count,
         };
-        if (!promotes[data[idKey]]) promotes[data[idKey]] = [];
-        promotes[data[idKey]].push(promote);
+      });
+    if (data.scoinCost || data.coinCost) {
+      promote.costs.push({
+        id: 202,
+        count: data.scoinCost || data.coinCost,
+      });
     }
-    return promotes;
-}
+    if (!promotes[data[idKey]]) promotes[data[idKey]] = [];
+    promotes[data[idKey]].push(promote);
+  }
+  return promotes;
+};

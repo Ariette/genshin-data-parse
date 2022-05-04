@@ -1,6 +1,11 @@
-import { WeaponCodexExcelConfigData, WeaponExcelConfigData, WeaponPromoteExcelConfigData, EquipAffixExcelConfigData } from '../loader.js';
+import {
+  WeaponCodexExcelConfigData,
+  WeaponExcelConfigData,
+  WeaponPromoteExcelConfigData,
+  EquipAffixExcelConfigData,
+} from '../loader.js';
 import { Localizable, FlagMap } from './_Localize.js';
-import buildPromote from './_Promote.js'
+import buildPromote from './_Promote.js';
 import { IWeapon, IWeaponSkill } from './_Interface.js';
 
 // Key List of WeaponExcelConfigData
@@ -10,7 +15,7 @@ import { IWeapon, IWeaponSkill } from './_Interface.js';
   'AwakenLightMapTexture'
   'AwakenMaterial' : 동심의 단편처럼 특수 재련 아이템이 있는 무기의 특수 재련 아이템 id (Material id)
   'AwakenTexture'
-  'DescTextMapHash'
+  'descTextMapHash'
   'DestroyReturnMaterial' : 파괴하면 나오는 아이템 종류. 데이터 상으로는 array지만, 두 종류 이상의 아이템이 나오는 경우는 없으므로 첫번째 값만 선택
   'DestroyReturnMaterialCount' : 파괴 하면 나오는 아이템 개수. 위와 동일함.
   'DestroyRule'
@@ -21,7 +26,7 @@ import { IWeapon, IWeaponSkill } from './_Interface.js';
   'Icon'
   'Id'
   'ItemType'
-  'NameTextMapHash'
+  'nameTextMapHash'
   'Rank'
   'RankLevel'
   'SkillAffix' : 데이터 상으로는 array지만, 스킬이 둘 이상인 무기가 없으므로 첫번째 값만 선택
@@ -44,52 +49,55 @@ import { IWeapon, IWeaponSkill } from './_Interface.js';
   'WeaponPromoteId'
 */
 
-const Promotes = buildPromote(WeaponPromoteExcelConfigData, 'WeaponPromoteId');
+const Promotes = buildPromote(WeaponPromoteExcelConfigData, 'weaponPromoteId');
 
-const SkillAffix: {[id: number]: IWeaponSkill} = {};
+const SkillAffix: { [id: number]: IWeaponSkill } = {};
 for (const data of EquipAffixExcelConfigData) {
-    const level = data.AffixId - ( data.Id * 10 ) + 1;
-    if (!SkillAffix[data.Id]) SkillAffix[data.Id] = {
-        name: new Localizable(data.NameTextMapHash),
-        desc: {r1: null, r2: null, r3: null, r4: null, r5: null}
+  const level = data.affixId - data.id * 10 + 1;
+  if (!SkillAffix[data.id])
+    SkillAffix[data.id] = {
+      name: new Localizable(data.nameTextMapHash),
+      desc: { r1: null, r2: null, r3: null, r4: null, r5: null },
     };
-    SkillAffix[data.Id].desc['r' + level] = new Localizable(data.DescTextMapHash);
+  SkillAffix[data.id].desc['r' + level] = new Localizable(data.descTextMapHash);
 }
 
-const Weapon: {[id: number]: IWeapon} = {}
+const Weapon: { [id: number]: IWeapon } = {};
 for (const data of WeaponExcelConfigData) {
-    Weapon[data.Id] = {
-        id: data.Id,
-        name: new Localizable(data.NameTextMapHash),
-        desc: new Localizable(data.DescTextMapHash),
-        type: new Localizable(FlagMap[data.WeaponType]),
-        rarity: data.RankLevel,
-        icon: data.Icon,
-        iconAwake: data.AwakenIcon,
-        baseExp: data.WeaponBaseExp,
-        stat: data.WeaponProp.filter(w => w.InitValue).map(w => {
-            return {
-                type: new Localizable(FlagMap[w.PropType]),
-                value: w.InitValue,
-                curve: w.Type
-            }
-        }),
-        promote: Promotes[data.WeaponPromoteId].slice(1),
-    }
-    if (data.DestroyRule) Weapon[data.Id].destroy = {
-        id: data.DestroyReturnMaterial[0],
-        count: data.DestroyReturnMaterialCount[0]
-    }
-    if (data.StoryId) Weapon[data.Id].story = data.StoryId;
-    if (data.AwakenMaterial) Weapon[data.Id].refineItem = data.AwakenMaterial;
-    if (data.SkillAffix) Weapon[data.Id].skill = SkillAffix[data.SkillAffix[0]];
+  Weapon[data.id] = {
+    id: data.id,
+    name: new Localizable(data.nameTextMapHash),
+    desc: new Localizable(data.descTextMapHash),
+    type: new Localizable(FlagMap[data.weaponType]),
+    rarity: data.rankLevel,
+    icon: data.icon,
+    iconAwake: data.awakenIcon,
+    baseExp: data.weaponBaseExp,
+    stat: data.weaponProp
+      .filter((w) => w.initValue)
+      .map((w) => {
+        return {
+          type: new Localizable(FlagMap[w.propType]),
+          value: w.initValue,
+          curve: w.type,
+        };
+      }),
+    promote: Promotes[data.weaponPromoteId].slice(1),
+  };
+  if (data.destroyRule)
+    Weapon[data.id].destroy = {
+      id: data.destroyReturnMaterial[0],
+      count: data.destroyReturnMaterialCount[0],
+    };
+  if (data.storyId) Weapon[data.id].story = data.storyId;
+  if (data.awakenMaterial) Weapon[data.id].refineItem = data.awakenMaterial;
+  if (data.skillAffix) Weapon[data.id].skill = SkillAffix[data.skillAffix[0]];
 }
-
 
 // Checking availability by using codex.
 // If there are any items that are not in codex but available in game, you should add them manually.
 for (const data of WeaponCodexExcelConfigData) {
-    Weapon[data.WeaponId].available = true;
+  Weapon[data.weaponId].available = true;
 }
 
-export default Weapon
+export default Weapon;

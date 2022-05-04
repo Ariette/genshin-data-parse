@@ -1,7 +1,12 @@
 import { Localizable } from './_Localize.js';
 import { ISkillDepot, ITalent, ISkill, IProud, IUpgrade } from './_Interface.js';
 import buildPromote from './_Promote.js';
-import { AvatarSkillDepotExcelConfigData, AvatarSkillExcelConfigData, AvatarTalentExcelConfigData, ProudSkillExcelConfigData } from '../loader.js';
+import {
+  AvatarSkillDepotExcelConfigData,
+  AvatarSkillExcelConfigData,
+  AvatarTalentExcelConfigData,
+  ProudSkillExcelConfigData,
+} from '../loader.js';
 
 // Key List of AvatarSkillDepotExcelConfigData
 /*
@@ -28,7 +33,7 @@ import { AvatarSkillDepotExcelConfigData, AvatarSkillExcelConfigData, AvatarTale
   'CostElemVal'
   'CostStamina'
   'DefaultLocked'
-  'DescTextMapHash'
+  'descTextMapHash'
   'DragType'
   'EnergyMin'
   'ForceCanDoSkill'
@@ -40,10 +45,10 @@ import { AvatarSkillDepotExcelConfigData, AvatarSkillExcelConfigData, AvatarTale
   'LockShape'
   'LockWeightParams'
   'MaxChargeNum'
-  'NameTextMapHash'
+  'nameTextMapHash'
   'NeedMonitor'
   'NeedStore'
-  'ProudSkillGroupId'
+  'proudSkillGroupId'
   'ShowIconArrow'
   'SkillIcon'
   'TriggerID'
@@ -52,93 +57,96 @@ import { AvatarSkillDepotExcelConfigData, AvatarSkillExcelConfigData, AvatarTale
 // Key List of AvatarTalentExcelConfigData
 /*
   'AddProps'
-  'DescTextMapHash'
+  'descTextMapHash'
   'Icon'
   'MainCostItemCount'
   'MainCostItemId'
-  'NameTextMapHash'
+  'nameTextMapHash'
   'OpenConfig'
   'ParamList'
   'PrevTalent'
   'TalentId'
 */
 
-const Prouds: {[id: number]: IProud} = {};
+const Prouds: { [id: number]: IProud } = {};
 for (const data of ProudSkillExcelConfigData) {
-    const id = data.ProudSkillGroupId;
-    if (!Prouds[id]) Prouds[id] = {
-        id: data.ProudSkillId,
-        name: new Localizable(data.NameTextMapHash),
-        desc: new Localizable(data.DescTextMapHash),
-        icon: data.Icon,
-        info: null,
-        element: null,
-        upgrade: [],
-        ascension: data.BreakLevel || 0
+  const id = data.proudSkillGroupId;
+  if (!Prouds[id])
+    Prouds[id] = {
+      id: data.proudSkillId,
+      name: new Localizable(data.nameTextMapHash),
+      desc: new Localizable(data.descTextMapHash),
+      icon: data.icon,
+      info: null,
+      element: null,
+      upgrade: [],
+      ascension: data.breakLevel || 0,
     };
-    if (!Prouds[id].info) { 
-        Prouds[id].info = data.ParamDescList.map(w => new Localizable(w)).filter(w => w.text);
-    }
-    const upgrade: IUpgrade = {
-        level: data.Level,
-        params: data.ParamList,
-        costs: undefined
-    }
-    upgrade.ascension = data.BreakLevel || 0;
-    if (data.CostItems?.some(w => w["Id"])) {
-        const fakePromotes = buildPromote([data], 'ProudSkillId');
-        Object.assign(upgrade, fakePromotes[data.ProudSkillId][0]);
-        if (!upgrade.props.length) upgrade.props = undefined;
-    }
-    Prouds[data.ProudSkillGroupId].upgrade.push(upgrade);
+  if (!Prouds[id].info) {
+    Prouds[id].info = data.paramDescList.map((w) => new Localizable(w)).filter((w) => w.text);
+  }
+  const upgrade: IUpgrade = {
+    level: data.level,
+    params: data.paramList,
+    costs: undefined,
+  };
+  upgrade.ascension = data.breakLevel || 0;
+  if (data.costItems?.some((w) => w['Id'])) {
+    const fakePromotes = buildPromote([data], 'proudSkillId');
+    Object.assign(upgrade, fakePromotes[data.proudSkillId][0]);
+    if (!upgrade.props.length) upgrade.props = undefined;
+  }
+  Prouds[data.proudSkillGroupId].upgrade.push(upgrade);
 }
 
-const Skills: {[id: number]: ISkill} = {};
+const Skills: { [id: number]: ISkill } = {};
 for (const data of AvatarSkillExcelConfigData) {
-    Skills[data.Id] = {
-        id: data.Id,
-        name: new Localizable(data.NameTextMapHash),
-        desc: new Localizable(data.DescTextMapHash),
-        icon: data.SkillIcon
-    }
-    if (data.CdTime) Skills[data.Id].cd = data.CdTime;
-    if (data.CostElemVal) Skills[data.Id].energy = data.CostElemVal;
-    if (data.ProudSkillGroupId) {
-        Skills[data.Id].upgrade = Prouds[data.ProudSkillGroupId].upgrade;
-        Skills[data.Id].info = Prouds[data.ProudSkillGroupId].info
-    }
+  Skills[data.id] = {
+    id: data.id,
+    name: new Localizable(data.nameTextMapHash),
+    desc: new Localizable(data.descTextMapHash),
+    icon: data.skillIcon,
+  };
+  if (data.cdTime) Skills[data.id].cd = data.cdTime;
+  if (data.costElemVal) Skills[data.id].energy = data.costElemVal;
+  if (data.proudSkillGroupId) {
+    Skills[data.id].upgrade = Prouds[data.proudSkillGroupId].upgrade;
+    Skills[data.id].info = Prouds[data.proudSkillGroupId].info;
+  }
 }
 
-const Talents: {[id: number]: ITalent} = {};
+const Talents: { [id: number]: ITalent } = {};
 for (const data of AvatarTalentExcelConfigData) {
-    Talents[data.TalentId] = {
-        id: data.TalentId,
-        name: new Localizable(data.NameTextMapHash),
-        desc: new Localizable(data.DescTextMapHash),
-        icon: data.Icon
-    };
+  Talents[data.talentId] = {
+    id: data.talentId,
+    name: new Localizable(data.nameTextMapHash),
+    desc: new Localizable(data.descTextMapHash),
+    icon: data.icon,
+  };
 }
 
-const AvatarSkillDepot: {[id: number]: ISkillDepot} = {};
+const AvatarSkillDepot: { [id: number]: ISkillDepot } = {};
 for (const data of AvatarSkillDepotExcelConfigData) {
-    if (!data.EnergySkill) continue; // 캐릭터 스킬이 아니면 일단 스킵함
-    AvatarSkillDepot[data.Id] = {
-        talent: {
-            normal: Skills[data.Skills[0]],
-            elemental: Skills[data.Skills[1]],
-            burst: Skills[data.EnergySkill]
-        },
-        passive: data.InherentProudSkillOpens.filter(w => w.ProudSkillGroupId && Prouds[w.ProudSkillGroupId].name.text).map(w => {
-            return {
-                id: Prouds[w["ProudSkillGroupId"]].id,
-                name: Prouds[w["ProudSkillGroupId"]].name,
-                desc: Prouds[w["ProudSkillGroupId"]].desc,
-                icon: Prouds[w["ProudSkillGroupId"]].icon,
-                ascension: Prouds[w["ProudSkillGroupId"]].ascension
-            }
-        }),
-        constellation: data.Talents.map(w => Talents[w])
-    };
+  if (!data.energySkill) continue; // 캐릭터 스킬이 아니면 일단 스킵함
+  AvatarSkillDepot[data.id] = {
+    talent: {
+      normal: Skills[data.skills[0]],
+      elemental: Skills[data.skills[1]],
+      burst: Skills[data.energySkill],
+    },
+    passive: data.inherentProudSkillOpens
+      .filter((w) => w.proudSkillGroupId && Prouds[w.proudSkillGroupId].name.text)
+      .map((w) => {
+        return {
+          id: Prouds[w['proudSkillGroupId']].id,
+          name: Prouds[w['proudSkillGroupId']].name,
+          desc: Prouds[w['proudSkillGroupId']].desc,
+          icon: Prouds[w['proudSkillGroupId']].icon,
+          ascension: Prouds[w['proudSkillGroupId']].ascension,
+        };
+      }),
+    constellation: data.talents.map((w) => Talents[w]),
+  };
 }
 
-export default AvatarSkillDepot
+export default AvatarSkillDepot;

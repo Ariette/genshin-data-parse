@@ -5,25 +5,27 @@
 // TextMap
 import fs from 'fs';
 import pa from 'path';
-import config from '../config.json';
+import Config from '../config.json';
+
+export const config = Config;
 
 interface TextMap {
-    [keyMap: number]: string
+  [keyMap: number]: string;
 }
 
 function loadJson(filename: string) {
-    const targetPath = pa.join(pa.resolve(), './lib/GenshinData/', filename);
-    const data = fs.readFileSync(targetPath, 'utf8');
-    return JSON.parse(data)
+  const targetPath = pa.join(pa.resolve(), './lib/GenshinData/', filename);
+  const data = fs.readFileSync(targetPath, 'utf8');
+  return JSON.parse(data);
 }
 
-function loadTextMap(): {[lang: string]: TextMap} {
-    const TextMap = {}
-    for (const l of config.lang) {
-        TextMap[l] = loadJson('TextMap/TextMap' + l + '.json');
-    }
-    if (!TextMap["EN"]) TextMap["EN"] = loadJson('TextMap/TextMapEN.json');
-    return TextMap
+function loadTextMap(): { [lang: string]: TextMap } {
+  const TextMap = {};
+  for (const l of config.lang) {
+    TextMap[l] = loadJson('TextMap/TextMap' + l + '.json');
+  }
+  if (!TextMap['EN']) TextMap['EN'] = loadJson('TextMap/TextMapEN.json');
+  return TextMap;
 }
 
 // TextMap
@@ -89,8 +91,7 @@ export { default as AvatarCostumeExcelConfigData } from '../lib/GenshinData/Exce
 
 */
 
-
-export { default as AvatarCurveExcelConfigData} from '../lib/GenshinData/ExcelBinOutput/AvatarCurveExcelConfigData.json';
+export { default as AvatarCurveExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarCurveExcelConfigData.json';
 export { default as AvatarExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarExcelConfigData.json';
 export { default as AvatarPromoteExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarPromoteExcelConfigData.json';
 export { default as AvatarSkillDepotExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/AvatarSkillDepotExcelConfigData.json';
@@ -248,7 +249,6 @@ export { default as EnvAnimalWeightExcelConfigData } from '../lib/GenshinData/Ex
 // Weapon Skills
 export { default as EquipAffixExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/EquipAffixExcelConfigData.json';
 
-
 /*
 export { default as ExhibitionCardExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExhibitionCardExcelConfigData.json';
 export { default as ExhibitionScoreExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/ExhibitionScoreExcelConfigData.json';
@@ -368,7 +368,6 @@ export { default as MatchPunishExcelConfigData } from '../lib/GenshinData/ExcelB
 export { default as MaterialCodexExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MaterialCodexExcelConfigData.json';
 export { default as MaterialExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MaterialExcelConfigData.json';
 export { default as MaterialSourceDataExcelConfigData } from '../lib/GenshinData/ExcelBinOutput/MaterialSourceDataExcelConfigData.json';
-
 
 /*
 //...

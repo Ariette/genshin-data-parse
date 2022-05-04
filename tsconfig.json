@@ -4,14 +4,9 @@
     "outDir": ".",
     "resolveJsonModule": true,
     "sourceMap": true,
-    "types":[],
+    "types": [],
     "composite": true
   },
-  "include": [
-    "lib/GenshinData/ExcelBinOutput/*.json",
-    "config.json"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["lib/GenshinData/ExcelBinOutput/*.json", "config.json"],
+  "exclude": ["node_modules"]
 }

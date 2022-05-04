@@ -5,7 +5,7 @@ import { ICook } from './_Interface.js';
 // CookRecipeExcelConfigData
 /*
   'CookMethod' : 요리할 때 나오는 이펙트 관련 정보
-  'DescTextMapHash'
+  'descTextMapHash'
   'EffectDesc'
   'FoodType'
   'Icon'
@@ -13,7 +13,7 @@ import { ICook } from './_Interface.js';
   'InputVec' : 재료 Material id
   'IsDefaultUnlocked'
   'MaxProficiency' : 자동 요리 개방에 필요한 완벽 조리 횟수. 기본적으로 성급*5 라서 따로 필요 없는듯?
-  'NameTextMapHash'
+  'nameTextMapHash'
   'QteParam'
   'QteQualityWeightVec'
   'QualityOutputVec' : 완성품 Material id
@@ -29,35 +29,38 @@ import { ICook } from './_Interface.js';
   'RecipeId' : 레시피 id
 */
 
-
-const Cook: {[id: number]: ICook} = {};
+const Cook: { [id: number]: ICook } = {};
 for (const data of CookRecipeExcelConfigData) {
-    Cook[data.Id] = {
-        id: data.Id,
-        name: new Localizable(data.NameTextMapHash),
-        desc: new Localizable(data.DescTextMapHash),
-        effect: data.EffectDesc.map(w => new Localizable(w)).filter(w => w.text),
-        rarity: data.RankLevel,
-        type: new Localizable(FlagMap[data.FoodType]),
-        icon: data.Icon,
-        ingredients: data.InputVec.filter(w => w.Id).map(w => {
-            return {
-                id: w.Id,
-                count: w.Count
-            }
-        }),
-        foods: data.QualityOutputVec.filter(w => w.Id).map(w => {
-            return {
-                id: w.Id,
-                count: w.Count
-            }
-        }),
-    }
+  Cook[data.id] = {
+    id: data.id,
+    name: new Localizable(data.nameTextMapHash),
+    desc: new Localizable(data.descTextMapHash),
+    effect: data.effectDesc.map((w) => new Localizable(w)).filter((w) => w.text),
+    rarity: data.rankLevel,
+    type: new Localizable(FlagMap[data.foodType]),
+    icon: data.icon,
+    ingredients: data.inputVec
+      .filter((w) => w.id)
+      .map((w) => {
+        return {
+          id: w.id,
+          count: w.count,
+        };
+      }),
+    foods: data.qualityOutputVec
+      .filter((w) => w.id)
+      .map((w) => {
+        return {
+          id: w.id,
+          count: w.count,
+        };
+      }),
+  };
 }
 for (const data of CookBonusExcelConfigData) {
-    Cook[data.RecipeId].special = {
-        id: data.ParamVec[0],
-        character: data.AvatarId,
-    }
+  Cook[data.recipeId].special = {
+    id: data.paramVec[0],
+    character: data.avatarId,
+  };
 }
-export default Cook
+export default Cook;

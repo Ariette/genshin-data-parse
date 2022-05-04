@@ -26,7 +26,7 @@ import AvatarSkillDepot from './_Skill.js';
   'CriticalHurt'
   'CutsceneShow'
   'DefenseBase'
-  'DescTextMapHash'
+  'descTextMapHash'
   'FeatureTagGroupID'
   'GachaCardNameHashPre'
   'GachaCardNameHashSuffix'
@@ -36,7 +36,7 @@ import AvatarSkillDepot from './_Skill.js';
   'IconName'
   'Id'
   'ImageName'
-  'InfoDescTextMapHash' : DescTextMapHash 랑 동일한 값으로 보임
+  'InfodescTextMapHash' : descTextMapHash 랑 동일한 값으로 보임
   'InitialWeapon' : 새로 캐릭터 얻으면 주는 기본 무기
   'IsRangeAttack'
   'LODPatternName'
@@ -45,7 +45,7 @@ import AvatarSkillDepot from './_Skill.js';
   'ManekinMotionConfig'
   'ManekinPathHashPre'
   'ManekinPathHashSuffix'
-  'NameTextMapHash'
+  'nameTextMapHash'
   'PrefabPathHashPre'
   'PrefabPathHashSuffix'
   'PrefabPathRagdollHashPre'
@@ -63,62 +63,66 @@ import AvatarSkillDepot from './_Skill.js';
   'WeaponType'
 */
 
-const Promotes = buildPromotes(AvatarPromoteExcelConfigData, 'AvatarPromoteId');
+const Promotes = buildPromotes(AvatarPromoteExcelConfigData, 'avatarPromoteId');
 const SkillDepots = AvatarSkillDepot;
-const Character: {[id: number]: ICharacter} = {};
+const Character: { [id: number]: ICharacter } = {};
 for (const data of AvatarExcelConfigData) {
-    Character[data.Id] = {
-        id: data.Id,
-        name: new Localizable(data.NameTextMapHash),
-        title: null,
-        desc: new Localizable(data.DescTextMapHash),
-        weapontype: new Localizable(FlagMap[data.WeaponType]),
-        element: null,
-        type: data.BodyType,
-        substat: Promotes[data.AvatarPromoteId][1]?.props?.[3]?.type,
-        affiliation: null,
-        region: null,
-        rarity: data.QualityType == 'QUALITY_ORANGE' ? 5 : 4,
-        birthday: null,
-        constellation: null,
-        cv: null,
-        icon: data.IconName,
-        iconSide: data.SideIconName,
-        iconImage: data.ImageName,
-        skills: SkillDepots[data.SkillDepotId],
-        stat: {
-            baseAtk: data.AttackBase,
-            baseDef: data.DefenseBase,
-            baseHp: data.HpBase,
-            curve: data.PropGrowCurves.map(w => {
-                return {
-                    type: new Localizable(FlagMap[w.Type]),
-                    curve: w.GrowCurve
-                }
-            }),
-            upgrade: Promotes[data.AvatarPromoteId].slice(1)
-        },
-        available: data.UseType == 'AVATAR_FORMAL',
-        day: null,
-        material: null
-    }
+  Character[data.id] = {
+    id: data.id,
+    name: new Localizable(data.nameTextMapHash),
+    title: null,
+    desc: new Localizable(data.descTextMapHash),
+    weapontype: new Localizable(FlagMap[data.weaponType]),
+    element: null,
+    type: data.bodyType,
+    substat: Promotes[data.avatarPromoteId][1]?.props?.[3]?.type,
+    affiliation: null,
+    region: null,
+    rarity: data.qualityType == 'QUALITY_ORANGE' ? 5 : 4,
+    birthday: null,
+    constellation: null,
+    cv: null,
+    icon: data.iconName,
+    iconSide: data.sideIconName,
+    iconImage: data.imageName,
+    skills: SkillDepots[data.skillDepotId],
+    stat: {
+      baseAtk: data.attackBase,
+      baseDef: data.defenseBase,
+      baseHp: data.hpBase,
+      curve: data.propGrowCurves.map((w) => {
+        return {
+          type: new Localizable(FlagMap[w.type]),
+          curve: w.growCurve,
+        };
+      }),
+      upgrade: Promotes[data.avatarPromoteId].slice(1),
+    },
+    available: data.useType == 'AVATAR_FORMAL',
+    day: null,
+    material: null,
+  };
 }
 
 for (const data of FetterInfoExcelConfigData) {
-    const elementAfter = new Localizable(data.AvatarVisionAfterTextMapHash);
-    const constAfter = new Localizable(data.AvatarConstellationAfterTextMapHash);
-    Character[data.AvatarId].element = elementAfter.text ? elementAfter : new Localizable(data.AvatarVisionBeforTextMapHash),
-    Character[data.AvatarId].constellation = constAfter.text ? constAfter : new Localizable(data.AvatarConstellationBeforTextMapHash),
-    Character[data.AvatarId].affiliation = new Localizable(data.AvatarNativeTextMapHash),
-    Character[data.AvatarId].title = new Localizable(data.AvatarTitleTextMapHash),
-    Character[data.AvatarId].region = data.AvatarAssocType.replace('ASSOC_TYPE_', ''),
-    Character[data.AvatarId].cv = {
-        cn: new Localizable(data.CvChineseTextMapHash),
-        jp: new Localizable(data.CvJapaneseTextMapHash),
-        en: new Localizable(data.CvEnglishTextMapHash),
-        ko: new Localizable(data.CvKoreanTextMapHash)
-    }
-    if (data.InfoBirthMonth) Character[data.AvatarId].birthday = data.InfoBirthMonth + '월 ' + data.InfoBirthDay + '일';
+  const elementAfter = new Localizable(data.avatarVisionAfterTextMapHash);
+  const constAfter = new Localizable(data.avatarConstellationAfterTextMapHash);
+  (Character[data.avatarId].element = elementAfter.text
+    ? elementAfter
+    : new Localizable(data.avatarVisionBeforTextMapHash)),
+    (Character[data.avatarId].constellation = constAfter.text
+      ? constAfter
+      : new Localizable(data.avatarConstellationBeforTextMapHash)),
+    (Character[data.avatarId].affiliation = new Localizable(data.avatarNativeTextMapHash)),
+    (Character[data.avatarId].title = new Localizable(data.avatarTitleTextMapHash)),
+    (Character[data.avatarId].region = data.avatarAssocType.replace('ASSOC_TYPE_', '')),
+    (Character[data.avatarId].cv = {
+      cn: new Localizable(data.cvChineseTextMapHash),
+      jp: new Localizable(data.cvJapaneseTextMapHash),
+      en: new Localizable(data.cvEnglishTextMapHash),
+      ko: new Localizable(data.cvKoreanTextMapHash),
+    });
+  if (data.infoBirthMonth) Character[data.avatarId].birthday = data.infoBirthMonth + '월 ' + data.infoBirthDay + '일';
 }
 
 // 기본 여행자 프로필을 복사해서 바람행자, 바위행자를 수동으로 추가해줌.
@@ -154,4 +158,4 @@ Character[17].name = Localizable.setText('루미네 (번개)');
 Character[17].skills = SkillDepots[707];
 Character[17].element = Localizable.setText('번개');
 
-export default Character
+export default Character;
