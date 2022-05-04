@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node --experimental-json-modules ./dist/index.js",
+    "generate": "node --experimental-json-modules ./dist/index.js",
     "prebuild": "node ./src/prebuild.js",
     "build": "tsc -p ./src/tsconfig.json",
     "watch": "tsc -w -p ./src/tsconfig.json"

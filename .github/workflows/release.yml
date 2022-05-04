@@ -38,9 +38,9 @@ jobs:
         npm ci
         npm run build
 
-    - name: Run Script
+    - name: Generate Data
       run: |
-        npm run start
+        npm run generate
         tar -zcf release.tar.gz output
 
     - name: Add SHORT_SHA env property with commit short sha

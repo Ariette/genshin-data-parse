@@ -22,10 +22,12 @@ jobs:
         submodules: true
 
     - name: Git Sumbodule Update
+      run: git submodule update --remote --recursive
+
+    - name: Git Add
       run: |
-        git pull --recurse-submodules
-        git submodule update --remote --recursive
         git add .
+        git status
 
     - name: Check Commit Message
       working-directory: lib/GenshinData
@@ -36,7 +38,7 @@ jobs:
         git config --global user.name 'Git bot'
         git config --global user.email 'bot@noreply.github.com'
         git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-        git commit -m ${{ env.COMMIT_MESSAGE }} && git push || exit 1
+        git commit -m "${{ env.COMMIT_MESSAGE }}" && git push || exit 1
 
     - name: Setup Node.js
       uses: actions/setup-node@v2
@@ -48,9 +50,9 @@ jobs:
         npm ci
         npm run build
 
-    - name: Run Script
+    - name: Generate Data
       run: |
-        npm run start
+        npm run generate
         tar -zcf release.tar.gz output
 
     - name: Add SHORT_SHA env property with commit short sha
