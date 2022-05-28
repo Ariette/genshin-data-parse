@@ -24,7 +24,7 @@ import { IWeapon, IWeaponSkill } from './_Interface.js';
   'GachaCardNameHashSuffix'
   'GadgetId'
   'Icon'
-  'Id'
+  'id'
   'ItemType'
   'nameTextMapHash'
   'Rank'

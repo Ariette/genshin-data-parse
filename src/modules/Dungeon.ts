@@ -17,7 +17,7 @@ import { IDungeon } from './_Interface.js';
   'FailSettleCountdownTime'
   'FirstPassRewardPreviewID'
   'ForbiddenRestart'
-  'Id'
+  'id'
   'InvolveType'
   'IsDynamicLevel'
   'LevelConfigMap'
@@ -63,7 +63,7 @@ for (const data of DungeonExcelConfigData) {
 }
 for (const data of DailyDungeonConfigData) {
   for (const day in data) {
-    if (day == 'Id' || day == 'Sunday') continue;
+    if (day == 'id' || day == 'Sunday') continue;
     for (const id of data[day]) {
       if (!Dungeons[id]) continue;
       if (!Dungeons[id].day) Dungeons[id].day = new Set();

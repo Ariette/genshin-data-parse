@@ -34,7 +34,7 @@ import AvatarSkillDepot from './_Skill.js';
   'GachaImageNameHashSuffix'
   'HpBase'
   'IconName'
-  'Id'
+  'id'
   'ImageName'
   'InfodescTextMapHash' : descTextMapHash 랑 동일한 값으로 보임
   'InitialWeapon' : 새로 캐릭터 얻으면 주는 기본 무기

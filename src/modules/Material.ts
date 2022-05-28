@@ -24,7 +24,7 @@ import { IMaterial } from './_Interface.js';
   'GadgetId'
   'GlobalItemLimit'
   'Icon'
-  'Id'
+  'id'
   'InteractionTitleTextMapHash'
   'IsForceGetHint'
   'IsHidden'

@@ -13,7 +13,7 @@ import {
   'AttackModeSkill'
   'EnergySkill' : 원소 폭발 skill id
   'ExtraAbilities'
-  'Id'
+  'id'
   'InherentProudSkillOpens' : 1/4돌파 특성 개방 관련 정보
   'LeaderTalent'
   'SkillDepotAbilityGroup'
@@ -38,7 +38,7 @@ import {
   'EnergyMin'
   'ForceCanDoSkill'
   'GlobalValueKey'
-  'Id'
+  'id'
   'IgnoreCDMinusRatio'
   'IsAttackCameraLock'
   'IsRanged'
@@ -91,7 +91,7 @@ for (const data of ProudSkillExcelConfigData) {
     costs: undefined,
   };
   upgrade.ascension = data.breakLevel || 0;
-  if (data.costItems?.some((w) => w['Id'])) {
+  if (data.costItems?.some((w) => w['id'])) {
     const fakePromotes = buildPromote([data], 'proudSkillId');
     Object.assign(upgrade, fakePromotes[data.proudSkillId][0]);
     if (!upgrade.props.length) upgrade.props = undefined;

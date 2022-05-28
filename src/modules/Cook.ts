@@ -9,7 +9,7 @@ import { ICook } from './_Interface.js';
   'EffectDesc'
   'FoodType'
   'Icon'
-  'Id' : 레시피 id
+  'id' : 레시피 id
   'InputVec' : 재료 Material id
   'IsDefaultUnlocked'
   'MaxProficiency' : 자동 요리 개방에 필요한 완벽 조리 횟수. 기본적으로 성급*5 라서 따로 필요 없는듯?
