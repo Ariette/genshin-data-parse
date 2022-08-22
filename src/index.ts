@@ -39,11 +39,13 @@ for (const id in Material) {
 
 for (const id in Cook) {
   builder.foods[id] = Cook[id];
-  const material: Set<number> = new Set();
+  const material = new Set<number>();
   Cook[id].ingredients.forEach((item) => {
     material.add(item.id);
     if (!Material[item.id].recipe) Material[item.id].recipe = [];
     if (!Material[item.id].recipe.includes(id)) Material[item.id].recipe.push(id);
+    // 도감에 없는 재료도 인게임에 있다고 알림
+    Material[item.id].available = true;
   });
   Cook[id].foods.forEach((item) => {
     Material[item.id].food = {
