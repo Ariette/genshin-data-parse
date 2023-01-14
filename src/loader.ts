@@ -14,7 +14,7 @@ interface TextMap {
 }
 
 function loadJson(filename: string) {
-  const targetPath = pa.join(__dirname, '/lib/GenshinData/Resources', filename);
+  const targetPath = pa.join(pa.resolve(), './src/lib/GenshinData/Resources', filename);
   const data = fs.readFileSync(targetPath, 'utf8');
   return JSON.parse(data);
 }
