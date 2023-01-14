@@ -5,10 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "generate": "node --experimental-json-modules ./dist/index.js",
+    "generate": "node --experimental-json-modules ./dist/index.cjs",
     "prebuild": "node ./src/prebuild.js",
-    "build": "tsc -p ./src/tsconfig.json",
-    "watch": "tsc -w -p ./src/tsconfig.json"
+    "build": "tsup src/index.ts",
+    "watch": "tsup src/index.ts --watch"
   },
   "keywords": [
     "genshin"
@@ -20,6 +20,7 @@
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
     "eslint": "^8.14.0",
+    "tsup": "^6.5.0",
     "typescript": "^4.6.4"
   }
 }
