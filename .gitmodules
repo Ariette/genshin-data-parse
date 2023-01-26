@@ -1,3 +1,3 @@
-[submodule "lib/GenshinData"]
+[submodule "src/lib/GenshinData"]
 	path = src/lib/GenshinData
-	url = https://github.com/Growgrass/Grasscutter_Resources.git
+	url = https://gitlab.com/YuukiPS/GC-Resources.git
