@@ -19,45 +19,47 @@ jobs:
         shell: bash
 
     steps:
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
 
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        submodules: true
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Check Commit Message
-      run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")" >> $GITHUB_ENV
+      - name: Checkout submodules
+        run: git submodule update --init --recursive --depth 1
 
-    - name: Build Script
-      run: |
-        npm ci
-        npm run build
+      - name: Check Commit Message
+        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")" >> $GITHUB_ENV
 
-    - name: Generate Data
-      run: |
-        npm run generate
-        tar -zcf release.tar.gz output
+      - name: Build Script
+        run: |
+          npm ci
+          npm run build
 
-    - name: Add SHORT_SHA env property with commit short sha
-      run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Generate Data
+        run: |
+          npm run generate
+          tar -zcf release.tar.gz output
 
-    - name: Release Data
-      id: create_release
-      uses: ncipollo/release-action@v1
-      with:
-        name: ${{ env.COMMIT_MESSAGE }}
-        artifacts: "release.tar.gz"
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ env.SHORT_SHA }}
+      - name: Add SHORT_SHA env property with commit short sha
+        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-    - name: Ping Updates
-      uses: peter-evans/repository-dispatch@v1
-      with:
-        token: ${{ secrets.TOKEN }}
-        repository: Ariette/genshin-search-bot
-        event-type: new-release
+      - name: Release Data
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          name: ${{ env.COMMIT_MESSAGE }}
+          artifacts: 'release.tar.gz'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ env.SHORT_SHA }}
+
+      - name: Ping Updates
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.TOKEN }}
+          repository: Ariette/genshin-search-bot
+          event-type: new-release

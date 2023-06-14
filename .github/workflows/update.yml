@@ -15,61 +15,60 @@ jobs:
         shell: bash
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        submodules: true
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Git Sumbodule Update
-      run: git submodule update --remote --recursive
+      - name: Git Sumbodule Update
+        run: git submodule update --init --remote --recursive --depth 1
 
-    - name: Git Add
-      run: |
-        git add .
-        git status
+      - name: Git Add
+        run: |
+          git add .
+          git status
 
-    - name: Check Commit Message
-      working-directory: lib/GenshinData
-      run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")" >> $GITHUB_ENV
+      - name: Check Commit Message
+        working-directory: lib/GenshinData
+        run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")" >> $GITHUB_ENV
 
-    - name: Commit update
-      run: |
-        git config --global user.name 'Git bot'
-        git config --global user.email 'bot@noreply.github.com'
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-        git commit -m "${{ env.COMMIT_MESSAGE }}" && git push || exit 1
+      - name: Commit update
+        run: |
+          git config --global user.name 'Git bot'
+          git config --global user.email 'bot@noreply.github.com'
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git commit -m "${{ env.COMMIT_MESSAGE }}" && git push || exit 1
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
-    - name: Build Script
-      run: |
-        npm ci
-        npm run build
+      - name: Build Script
+        run: |
+          npm ci
+          npm run build
 
-    - name: Generate Data
-      run: |
-        npm run generate
-        tar -zcf release.tar.gz output
+      - name: Generate Data
+        run: |
+          npm run generate
+          tar -zcf release.tar.gz output
 
-    - name: Add SHORT_SHA env property with commit short sha
-      run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Add SHORT_SHA env property with commit short sha
+        run: echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
-    - name: Release Data
-      id: create_release
-      uses: ncipollo/release-action@v1
-      with:
-        name: ${{ env.COMMIT_MESSAGE }}
-        artifacts: "release.tar.gz"
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag: ${{ env.SHORT_SHA }}
+      - name: Release Data
+        id: create_release
+        uses: ncipollo/release-action@v1
+        with:
+          name: ${{ env.COMMIT_MESSAGE }}
+          artifacts: 'release.tar.gz'
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ env.SHORT_SHA }}
 
-    - name: Ping Updates
-      uses: peter-evans/repository-dispatch@v1
-      with:
-        token: ${{ secrets.TOKEN }}
-        repository: Ariette/genshin-search-bot
-        event-type: new-release
+      - name: Ping Updates
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.TOKEN }}
+          repository: Ariette/genshin-search-bot
+          event-type: new-release
