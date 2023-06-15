@@ -29,7 +29,7 @@ jobs:
           git status
 
       - name: Check Commit Message
-        working-directory: lib/GenshinData
+        working-directory: src/lib/GenshinData
         run: echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")" >> $GITHUB_ENV
 
       - name: Commit update
@@ -42,7 +42,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: '16'
 
       - name: Build Script
         run: |
