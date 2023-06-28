@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "generate": "node --experimental-json-modules ./dist/index.cjs",
+    "generate": "node ./dist/index.cjs",
     "prebuild": "node ./src/prebuild.js",
     "build": "tsup src/index.ts",
     "watch": "tsup src/index.ts --watch"
